@@ -22,11 +22,6 @@ public class UserController {
         return "User UID: " + uid;
     }
 
-    @PostMapping
-    public String createUser(@RequestBody User user) throws ExecutionException, InterruptedException {
-        return userService.createUser(user);
-    }
-
     @GetMapping("/{id}")
     public User getUser(@PathVariable String id) throws ExecutionException, InterruptedException {
         return userService.getUser(id);

@@ -9,103 +9,36 @@ import com.google.firebase.auth.UserRecord;
 import com.google.firebase.cloud.FirestoreClient;
 import com.mobile.group.tlu_contact_be.dto.request.auth.UserLoginReq;
 import com.mobile.group.tlu_contact_be.dto.request.user.AddUserReq;
-import com.mobile.group.tlu_contact_be.dto.response.user.UserDetailRes;
 import com.mobile.group.tlu_contact_be.model.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-//@Service
-//public class UserService {
-//
-//    private final Firestore db;
-//
-//    public UserService() {
-//        this.db = FirestoreClient.getFirestore();
-//    }
-//
-//    // Create
-//    public String createUser(User user) throws ExecutionException, InterruptedException {
-//        ApiFuture<DocumentReference> future = db.collection("users").add(user);
-//        return future.get().getId();
-//    }
-//
-//    // Read (lấy một user)
-//    public User getUser(String id) throws ExecutionException, InterruptedException {
-//        DocumentReference docRef = db.collection("users").document(id);
-//        ApiFuture<DocumentSnapshot> future = docRef.get();
-//        DocumentSnapshot document = future.get();
-//        if (document.exists()) {
-//            return document.toObject(User.class);
-//        }
-//        return null;
-//    }
-//
-//    // Read (lấy tất cả users)
-//    public List<User> getAllUsers() throws ExecutionException, InterruptedException {
-//        ApiFuture<QuerySnapshot> future = db.collection("users").get();
-//        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//        List<User> users = new ArrayList<>();
-//        for (QueryDocumentSnapshot document : documents) {
-//            User user = document.toObject(User.class);
-//            user.setId(document.getId());
-//            users.add(user);
-//        }
-//        return users;
-//    }
-//
-//    // Update
-//    public void updateUser(String id, User user) throws ExecutionException, InterruptedException {
-//        db.collection("users").document(id).set(user);
-//    }
-//
-//    // Delete
-//    public void deleteUser(String id) {
-//        db.collection("users").document(id).delete();
-//    }
-//}
-
-import com.google.cloud.firestore.Firestore;
-import com.google.firebase.cloud.FirestoreClient;
-import com.mobile.group.tlu_contact_be.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import com.mobile.group.tlu_contact_be.dto.constant.Role;
 
 @Service
 public class UserService {
 
     private final Firestore db;
-    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private final FirebaseAuth firebaseAuth;
     @Value("${firebase.api.key}")
     private String FIREBASE_API_KEY;
 
     public UserService(FirebaseApp firebaseApp) {
         this.db = FirestoreClient.getFirestore(firebaseApp);
+        this.firebaseAuth = FirebaseAuth.getInstance();
     }
 
     public UserRecord register(AddUserReq request) {
         if (checkEmailExists(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
-
-//        User newUser = User.builder()
-//                .email(request.getEmail())
-//                .password(request.getPassword()) //Nhớ mã hóa mật khẩu
-//                .displayName(request.getDisplayName())
-//                .phoneNumber(request.getPhoneNumber())
-//                .photoURL(request.getPhotoUrl())
-//                .build();
 
         UserRecord.CreateRequest newUser = new UserRecord.CreateRequest()
                 .setEmail(request.getEmail())
@@ -116,9 +49,36 @@ public class UserService {
 
         try {
             UserRecord userRecord = firebaseAuth.createUser(newUser);
+            saveUserToFirestore(userRecord.getUid(), request);
             return userRecord;
-        } catch (FirebaseAuthException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void saveUserToFirestore(String uid, AddUserReq request) throws Exception {
+        Role role = null;
+        if(request.getEmail().endsWith("@tlu.edu.vn")){
+            role = Role.STAFF;
+        } else if (request.getEmail().endsWith("@e.tlu.edu.vn")){
+            role = Role.STUDENT;
+        } else {
+            throw new Exception("Invalid email");
+        }
+
+        User user = User.builder()
+                .id(uid)
+                .email(request.getEmail())
+                .displayName(request.getDisplayName())
+                .phoneNumber(request.getPhoneNumber())
+                .photoURL(request.getPhotoUrl())
+                .role(role)
+                .build();
+
+        try {
+            db.collection("users").document(uid).set(user).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to save user to Firestore", e);
         }
     }
 
@@ -146,47 +106,54 @@ public class UserService {
     }
 
 
-
-
-
-
-    // Create
-    public String createUser(User user) throws ExecutionException, InterruptedException {
-        ApiFuture<DocumentReference> future = db.collection("users").add(user);
-        return future.get().getId();
-    }
-
-    // Read (lấy một user)
-    public User getUser(String id) throws ExecutionException, InterruptedException {
-        DocumentReference docRef = db.collection("users").document(id);
-        ApiFuture<DocumentSnapshot> future = docRef.get();
-        DocumentSnapshot document = future.get();
-        if (document.exists()) {
-            return document.toObject(User.class);
+    public User getUser(String id) {
+        try {
+            DocumentReference docRef = db.collection("users").document(id);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            DocumentSnapshot document = future.get();
+            if (document.exists()) {
+                User user = document.toObject(User.class);
+                user.setId(document.getId());  // Đảm bảo ID được gán
+                return user;
+            }
+            return null;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to get user", e);
         }
-        return null;
     }
 
-    // Read (lấy tất cả users)
-    public List<User> getAllUsers() throws ExecutionException, InterruptedException {
-        ApiFuture<QuerySnapshot> future = db.collection("users").get();
-        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+    public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents) {
-            User user = document.toObject(User.class);
-            user.setId(document.getId());
-            users.add(user);
+        try {
+            ApiFuture<QuerySnapshot> future = db.collection("users").get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                User user = document.toObject(User.class);
+                user.setId(document.getId());  // Đảm bảo ID được gán
+                users.add(user);
+            }
+            return users;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to get all users", e);
         }
-        return users;
     }
 
-    // Update
-    public void updateUser(String id, User user) throws ExecutionException, InterruptedException {
-        db.collection("users").document(id).set(user);
+
+    public void updateUser(String id, User user) {
+        try {
+            db.collection("users").document(id).set(user).get();  // Sử dụng UID làm ID
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to update user", e);
+        }
     }
 
-    // Delete
+
     public void deleteUser(String id) {
-        db.collection("users").document(id).delete();
+        try {
+            db.collection("users").document(id).delete().get(); // Sử dụng UID làm ID
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to delete user", e);
+        }
     }
 }
