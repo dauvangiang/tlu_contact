@@ -13,15 +13,13 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-    String id;         // UID từ Firebase Authentication
+    String id;
     String displayName;
     String email;
     String phoneNumber;
     Role role;
     String photoURL;
-    String staffId;     // Mã CBGV (nếu là CBGV)
-    String studentId;   // Mã sinh viên (nếu là SV)
-    String unit; //ID của unit, đơn vị trực thuộc
+    String unit;
     @JsonIgnore
-    String password;   // Không cần lưu trữ mật khẩu ở đây (chỉ dùng để đăng ký)
+    String password;
 }
