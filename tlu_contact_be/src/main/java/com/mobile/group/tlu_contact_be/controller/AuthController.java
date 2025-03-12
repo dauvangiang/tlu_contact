@@ -17,7 +17,6 @@ public class AuthController {
 
     @PostMapping("v1/auth/register")
     public ResponseEntity<Object> register(@RequestBody AddUserReq request) {
-        System.err.println("Hello");
         return ResponseEntity.ok(userService.register(request));
     }
 

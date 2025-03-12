@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/firebase")
+@RequestMapping("api/v1/firebase")
 public class FirebaseTestController {
     @GetMapping("/check")
     public String checkFirebase() {
