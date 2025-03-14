@@ -9,10 +9,12 @@ import com.google.firebase.auth.UserRecord;
 import com.google.firebase.cloud.FirestoreClient;
 import com.mobile.group.tlu_contact_be.dto.request.auth.UserLoginReq;
 import com.mobile.group.tlu_contact_be.dto.request.user.AddUserReq;
+import com.mobile.group.tlu_contact_be.exceptions.CustomException;
 import com.mobile.group.tlu_contact_be.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -37,7 +39,7 @@ public class UserService {
 
     public UserRecord register(AddUserReq request) {
         if (checkEmailExists(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new CustomException("Email đã tồn tại.");
         }
 
         UserRecord.CreateRequest newUser = new UserRecord.CreateRequest()
@@ -52,18 +54,18 @@ public class UserService {
             saveUserToFirestore(userRecord.getUid(), request);
             return userRecord;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new CustomException(e.getMessage());
         }
     }
 
-    private void saveUserToFirestore(String uid, AddUserReq request) throws Exception {
+    private void saveUserToFirestore(String uid, AddUserReq request) {
         Role role = null;
         if(request.getEmail().endsWith("@tlu.edu.vn")){
             role = Role.STAFF;
         } else if (request.getEmail().endsWith("@e.tlu.edu.vn")){
             role = Role.STUDENT;
         } else {
-            throw new Exception("Invalid email");
+            throw new CustomException("Địa chỉ email không hợp lệ.");
         }
 
         User user = User.builder()
@@ -78,22 +80,26 @@ public class UserService {
         try {
             db.collection("users").document(uid).set(user).get();
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to save user to Firestore", e);
+            throw new CustomException("Đã có lỗi xảy ra.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     public Object login(UserLoginReq request) {
         String FIREBASE_LOGIN_URL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + FIREBASE_API_KEY;
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<UserLoginReq> reqHttpEntity = new HttpEntity<>(request);
-        ResponseEntity<Object> response = restTemplate.exchange(
-                FIREBASE_LOGIN_URL,
-                HttpMethod.POST,
-                reqHttpEntity,
-                Object.class
-        );
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<UserLoginReq> reqHttpEntity = new HttpEntity<>(request);
+            ResponseEntity<Object> response = restTemplate.exchange(
+                    FIREBASE_LOGIN_URL,
+                    HttpMethod.POST,
+                    reqHttpEntity,
+                    Object.class
+            );
 
-        return response.getBody();
+            return response.getBody();
+        } catch (Exception ex) {
+            throw new CustomException("Email hoặc mật khẩu không đúng.");
+        }
     }
 
     private boolean checkEmailExists(String email) {
