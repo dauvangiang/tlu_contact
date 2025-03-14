@@ -10,19 +10,19 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/profile")
+    @GetMapping("v1/users/profile")
     public String getUserProfile(HttpServletRequest request) {
         String uid = (String) request.getAttribute("uid");
         return "User UID: " + uid;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("v1/users/{id}")
     public User getUser(@PathVariable String id) throws ExecutionException, InterruptedException {
         return userService.getUser(id);
     }
@@ -32,12 +32,12 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("v1/users/update/{id}")
     public void updateUser(@PathVariable String id, @RequestBody User user) throws ExecutionException, InterruptedException {
         userService.updateUser(id, user);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("v1/users/delete/{id}")
     public void deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
     }
