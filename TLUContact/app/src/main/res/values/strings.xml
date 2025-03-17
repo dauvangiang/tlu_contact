@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">TLU Contact</string>
+    <string name="login_title">Đăng nhập</string>
+    <string name="register_title">Đăng ký</string>
+    <string name="terms_and_policies_title">Điều khoản và chính sách</string>
+    <string name="unit_title">Đơn vị</string>
+    <string name="staff_title">CBGV</string>
+    <string name="student_title">Sinh viên</string>
+    <string name="my_title">Tôi</string>
+    <string name="search_hint">Tìm theo tên, mã số,…</string>
+    <string name="code_title">Mã số</string>
+    <string name="phone_number_title">Số điện thoại</string>
+    <string name="email_title">Email</string>
+    <string name="address_title">Địa chỉ</string>
+    <string name="hometown_title">Quê quán</string>
+    <string name="class_title">Lớp/Đơn vị</string>
+    <string name="unit_contact_title">Danh bạ đơn vị</string>
+    <string name="staff_contact_title">Danh bạ CBGV</string>
+    <string name="student_contact_title">Danh bạ sinh viên</string>
 </resources>
