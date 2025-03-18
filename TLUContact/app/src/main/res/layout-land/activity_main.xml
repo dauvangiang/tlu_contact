@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <!-- Sidebar Navigation -->
+    <LinearLayout
+        android:id="@+id/sidebar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#F5F5F5"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/menu_title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/sidebar_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:menu="@menu/sidebar_nav"
+            app:itemBackground="@drawable/sidebar_item_background"
+            app:itemIconTint="@color/sidebar_item_text"
+            app:itemTextColor="@color/sidebar_item_text"
+            />
+    </LinearLayout>
+
+    <!-- Nội dung hiển thị -->
+    <FrameLayout
+        android:id="@+id/frame_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"/>
+
+</LinearLayout>

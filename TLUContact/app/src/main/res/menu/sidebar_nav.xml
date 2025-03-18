@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_units_contact"
+            android:title="@string/unit_contact_title"
+            android:icon="@drawable/ic_unit_contact"/>
+
+        <item
+            android:id="@+id/nav_staffs_contact"
+            android:title="@string/staff_contact_title"
+            android:icon="@drawable/ic_staff_contact"/>
+
+        <item
+            android:id="@+id/nav_students_contact"
+            android:title="@string/student_contact_title"
+            android:icon="@drawable/ic_student_contact"/>
+
+        <item
+            android:id="@+id/nav_about"
+            android:title="@string/my_title"
+            android:icon="@drawable/ic_user"/>
+    </group>
+
+</menu>

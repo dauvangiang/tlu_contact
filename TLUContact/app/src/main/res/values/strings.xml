@@ -17,4 +17,5 @@
     <string name="unit_contact_title">Danh bạ đơn vị</string>
     <string name="staff_contact_title">Danh bạ CBGV</string>
     <string name="student_contact_title">Danh bạ sinh viên</string>
+    <string name="menu_title">Menu</string>
 </resources>
