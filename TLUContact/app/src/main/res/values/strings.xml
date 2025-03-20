@@ -17,4 +17,13 @@
     <string name="unit_contact_title">Danh bạ đơn vị</string>
     <string name="staff_contact_title">Danh bạ CBGV</string>
     <string name="student_contact_title">Danh bạ sinh viên</string>
+    <string name="menu_title">Menu</string>
+    <string name="text_chat_action">Nhắn tin</string>
+    <string name="call_action">Gọi thoại</string>
+    <string name="send_email_action">Gửi email</string>
+    <string name="contact_name_mockup">GODFRED ASAMOAH</string>
+    <string name="second_contact_info_mockup">Kumasi, Ghana</string>
+    <string name="tv_label_mockup">Di động</string>
+    <string name="tv_value_mockup">+2332471729</string>
+    <string name="content_desc_mockup">Copy</string>
 </resources>
