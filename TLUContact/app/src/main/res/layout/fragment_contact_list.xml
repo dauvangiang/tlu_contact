@@ -62,28 +62,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewSearch">
 
-        <Spinner
-            android:id="@+id/spinnerFilter"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:background="@null"
-            android:minWidth="50dp"
-            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="5dp">
 
-        <ImageView
-            android:id="@+id/imageViewDropdown"
-            android:layout_width="21dp"
-            android:layout_height="21dp"
-            android:layout_marginStart="1dp"
-            android:src="@drawable/drop_list_filter"
-            app:layout_constraintBottom_toBottomOf="@+id/spinnerFilter"
-            app:layout_constraintStart_toEndOf="@+id/spinnerFilter"
-            app:layout_constraintTop_toTopOf="@+id/spinnerFilter"
-            app:tint="#757575" />
+            <Spinner
+                android:id="@+id/spinnerFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="32dp"
+                android:background="@null"/>
+
+            <ImageView
+                android:id="@+id/imageViewDropdown"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/drop_list_filter"
+                app:tint="#757575"/>
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/buttonSort"
