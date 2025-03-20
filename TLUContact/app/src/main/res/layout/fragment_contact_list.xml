@@ -21,19 +21,18 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="0dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/imageViewSearch"
                 android:layout_width="17dp"
                 android:layout_height="17dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/magnifyingglass"
+                android:src="@drawable/ic_search"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="#757575" />
+                app:tint="@color/second_black" />
 
             <EditText
                 android:id="@+id/editTextSearch"
