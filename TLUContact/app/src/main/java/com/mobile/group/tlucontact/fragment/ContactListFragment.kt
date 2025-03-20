@@ -1,6 +1,7 @@
 package com.mobile.group.tlucontact.fragment
 
 import Contact
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,8 +26,9 @@ class ContactListFragment : Fragment() {
     private lateinit var spinnerFilter: Spinner
     private lateinit var buttonSort: ImageButton
 
-    private var isAscendingSort = true
+    private var isAscending = true
     private val mockContacts = createMockData()
+    private lateinit var currDatas: MutableList<Contact>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,19 +46,17 @@ class ContactListFragment : Fragment() {
         spinnerFilter = view.findViewById(R.id.spinnerFilter)
         buttonSort = view.findViewById(R.id.buttonSort)
 
-        setupRecyclerView()
+        setupRecyclerView(requireContext())
         setupSearch()
         setupFilter()
         setupSort()
     }
 
-    private fun setupRecyclerView() {
-        adapter = ContactAdapter()
+    private fun setupRecyclerView(context: Context) {
+        adapter = ContactAdapter(context, mockContacts)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-
-        // Set initial data
-        adapter.setData(mockContacts)
+        currDatas = mockContacts
     }
 
     private fun setupSearch() {
@@ -64,11 +64,27 @@ class ContactListFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                adapter.filter(s.toString())
+                filter(s.toString())
             }
 
             override fun afterTextChanged(s: Editable?) {}
         })
+    }
+
+    private fun filter(text: String) {
+        val contacts = mutableListOf<Contact>()
+
+        mockContacts.forEach { contact ->
+            if (contact.name.contains(text, ignoreCase = true) ||
+                contact.phone.contains(text) ||
+                contact.email.contains(text, ignoreCase = true)
+            ) {
+                contacts.add(contact)
+            }
+        }
+
+        currDatas = contacts
+        adapter.filter(contacts)
     }
 
     private fun setupFilter() {
@@ -89,46 +105,48 @@ class ContactListFragment : Fragment() {
 
     private fun filterContacts(filter: String) {
         if (filter == "Tất cả") {
-            adapter.setData(mockContacts)
+            adapter.filter(mockContacts)
+            currDatas = mockContacts
         } else {
-            val filtered = mockContacts.filter { it.position == filter }
-            adapter.setData(filtered)
+            val filtered = mockContacts.filter { it.position == filter }.toMutableList()
+            currDatas = filtered
+            adapter.filter(filtered)
         }
     }
 
     private fun setupSort() {
         buttonSort.setOnClickListener {
-            isAscendingSort = !isAscendingSort
-            adapter.sort(isAscendingSort)
+            isAscending = !isAscending
+            adapter.setSortedList(currDatas, isAscending)
         }
     }
 
-    private fun createMockData(): List<Contact> {
-        return listOf(
-            Contact("1", "Nguyễn Văn An", "Giảng viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("2", "Trần Thị Bình", "Giảng viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("3", "Lê Văn Cường", "Giảng viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("4", "Phạm Thị Dung", "Giảng viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("5", "Hoàng Văn Em", "Sinh viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("6", "Ngô Thị Phương", "Sinh viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("7", "Đỗ Văn Giang", "Sinh viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("8", "Bùi Thị Hoa", "Nhân viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("9", "Nguyễn Văn Thắm", "Giảng viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("10", "Trần Văn Khánh", "Giảng viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("11", "Lê Thị Lan", "Giảng viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("12", "Phạm Văn Minh", "Nhân viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("13", "Hoàng Thị Ngọc", "Nhân viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("14", "Ngô Văn Oanh", "Sinh viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("15", "Đỗ Thị Phương", "Sinh viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("16", "Bùi Văn Quang", "Sinh viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("17", "Nguyễn Thị Rạng", "Giảng viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("18", "Trần Văn Sơn", "Giảng viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("19", "Lê Thị Tuyết", "Giảng viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("20", "Phạm Văn Uy", "Nhân viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("21", "Hoàng Thị Vân", "Nhân viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("22", "Ngô Văn Xuân", "Sinh viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("23", "Đỗ Thị Yến", "Sinh viên", "Khoa CNTT", R.drawable.hmm),
-            Contact("24", "Bùi Văn Zương", "Sinh viên", "Khoa CNTT", R.drawable.hmm)
+    private fun createMockData(): MutableList<Contact> {
+        return mutableListOf(
+            Contact("1", "Nguyễn Văn An", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("2", "Trần Thị Bình", "0123456789", "ttb@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("3", "Lê Văn Cường", "0123456789", "lvc@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("4", "Phạm Thị Dung", "0123456789", "ptd@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("5", "Hoàng Văn Em", "0123456789", "hve@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("6", "Ngô Thị Phương", "0123456789", "ntp@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("7", "Đỗ Văn Giang", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("8", "Bùi Thị Hoa", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("9", "Nguyễn Văn Thắm", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("10", "Trần Văn Khánh", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("11", "Lê Thị Lan", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("12", "Phạm Văn Minh", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("13", "Hoàng Thị Ngọc", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("14", "Ngô Văn Oanh", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("15", "Đỗ Thị Phương", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("16", "Bùi Văn Quang", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("17", "Nguyễn Thị Rạng", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("18", "Trần Văn Sơn", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("19", "Lê Thị Tuyết", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("20", "Phạm Văn Uy", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("21", "Hoàng Thị Vân", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("22", "Ngô Văn Xuân", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("23", "Đỗ Thị Yến", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
+            Contact("24", "Bùi Văn Zương", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar)
         )
     }
 }
