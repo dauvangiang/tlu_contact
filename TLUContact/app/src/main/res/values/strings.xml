@@ -26,4 +26,6 @@
     <string name="tv_label_mockup">Di động</string>
     <string name="tv_value_mockup">+2332471729</string>
     <string name="content_desc_mockup">Copy</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -34,8 +34,8 @@
     </LinearLayout>
 
     <!-- Nội dung hiển thị -->
-    <FrameLayout
-        android:id="@+id/frame_content"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"/>
