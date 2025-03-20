@@ -31,4 +31,7 @@
     <string name="password">Mật khẩu</string>
     <string name="forgot_password">Quên mật khẩu</string>
     <string name="remember_password">Ghi nhớ mật khẩu</string>
+    <string name="new_password_title">Mật khẩu mới</string>
+    <string name="confirm_new_password">Nhập lại mật khẩu mới</string>
+    <string name="change_password_title">Thay đổi mật khẩu</string>
 </resources>

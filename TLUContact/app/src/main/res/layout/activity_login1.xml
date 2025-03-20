@@ -1,6 +1,5 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,25 +8,19 @@
     android:padding="20dp"
     tools:context=".LoginActivity">
 
-    <!-- View ẩn để đẩy nội dung lên trên -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"/>
-
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/tlu"
         android:contentDescription="Logo"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TLU Contact"
+        android:text="@string/app_name"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="@color/blue"
+        android:textColor="@color/primary_blue"
         android:layout_marginTop="16dp"/>
 
     <LinearLayout
@@ -41,8 +34,8 @@
             android:id="@+id/tv_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Đăng nhập"
-            android:textColor="@color/blue"
+            android:text="@string/login_title"
+            android:textColor="@color/primary_blue"
             android:textStyle="bold"
             android:textSize="16sp"
             android:paddingEnd="12dp"
@@ -52,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Đăng ký"
-            android:textColor="@color/gray"
+            android:textColor="@color/second_black"
             android:textSize="16sp"/>
     </LinearLayout>
 
@@ -61,8 +54,10 @@
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
-        android:drawableStart="@drawable/ic_email"
+        android:hint="@string/email_title"
+        android:drawableStart="@drawable/ic_email_24dp"
+        android:drawableTint="@color/second_black"
+        android:drawablePadding="8dp"
         android:padding="12dp"
         android:textSize="14sp"
         android:drawableBottom="@drawable/edittext_underline"
@@ -75,8 +70,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Mật khẩu"
-        android:drawableStart="@drawable/ic_password"
-        android:drawableEnd="@drawable/ic_eye"
+        android:drawableStart="@drawable/ic_lock"
+        android:drawableEnd="@drawable/ic_visibility"
         android:padding="12dp"
         android:drawableBottom="@drawable/edittext_underline"
         android:textSize="14sp"
@@ -95,7 +90,7 @@
             android:id="@+id/remember_me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ghi nhớ mật khẩu"
+            android:text="@string/remember_password"
             android:textSize="14sp"
             android:layout_weight="1"/>
 
@@ -103,8 +98,8 @@
             android:id="@+id/forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quên mật khẩu"
-            android:textColor="@color/blue"
+            android:text="@string/forgot_password"
+            android:textColor="@color/primary_blue"
             android:textStyle="bold"
             android:textSize="14sp"/>
     </LinearLayout>
@@ -113,9 +108,9 @@
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Đăng nhập"
+        android:text="@string/login_title"
         android:background="@drawable/button_rounded"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         android:layout_marginTop="20dp"/>
 
     <TextView
@@ -124,11 +119,5 @@
         android:text="Bằng cách đăng nhập, bạn đồng ý với Điều khoản và chính sách của chúng tôi"
         android:textSize="15sp"
         android:layout_marginTop="10dp"/>
-
-    <!-- View ẩn để cân bằng phần dưới -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"/>
 
 </LinearLayout>
