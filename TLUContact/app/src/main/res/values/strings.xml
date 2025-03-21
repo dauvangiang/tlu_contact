@@ -11,6 +11,9 @@
     <string name="code_title">Mã số</string>
     <string name="phone_number_title">Số điện thoại</string>
     <string name="email_title">Email</string>
+    <string name="person_title">Họ và tên</string>
+    <string name="id_person">Mã cán bộ / Mã sinh viên</string>
+    <string name="next_password">Tiếp theo</string>
     <string name="address_title">Địa chỉ</string>
     <string name="hometown_title">Quê quán</string>
     <string name="class_title">Lớp/Đơn vị</string>
@@ -28,4 +31,9 @@
     <string name="content_desc_mockup">Copy</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="terms_text">Bằng cách đăng ký, bạn đồng ý với <b>Điều khoản và chính sách</b> của chúng tôi</string>
+    <string name="password_title">Mật khẩu</string>
+    <string name="confirm_new_password">Nhập lại mật khẩu</string>
+
 </resources>
