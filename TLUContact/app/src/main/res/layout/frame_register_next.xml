@@ -108,7 +108,7 @@
             android:layout_marginStart="10dp"/>
     </LinearLayout>
 
-    <!-- Nút tiếp theo -->
+    <!-- Nút đăng ký -->
     <Button
         android:id="@+id/btn_next_register"
         android:layout_width="match_parent"
