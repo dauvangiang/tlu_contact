@@ -111,7 +111,6 @@ public class UserService {
         }
     }
 
-
     public User getUser(String id) {
         try {
             DocumentReference docRef = db.collection("users").document(id);
@@ -124,10 +123,9 @@ public class UserService {
             }
             return null;
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to get user", e);
+            throw new CustomException("Failed to get user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
@@ -141,25 +139,23 @@ public class UserService {
             }
             return users;
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to get all users", e);
+            throw new CustomException("Failed to get all users", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     public void updateUser(String id, User user) {
         try {
             db.collection("users").document(id).set(user).get();  // Sử dụng UID làm ID
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to update user", e);
+            throw new CustomException("Failed to update user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     public void deleteUser(String id) {
         try {
             db.collection("users").document(id).delete().get(); // Sử dụng UID làm ID
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to delete user", e);
+            throw new CustomException("Failed to delete user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
