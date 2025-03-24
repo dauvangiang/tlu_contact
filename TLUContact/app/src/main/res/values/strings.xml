@@ -34,4 +34,6 @@
     <string name="new_password_title">Mật khẩu mới</string>
     <string name="confirm_new_password">Nhập lại mật khẩu mới</string>
     <string name="change_password_title">Thay đổi mật khẩu</string>
+    <string name="terms_and_policy">Bằng cách đăng nhập, bạn đồng ý với <font color='#FF006CD9'>Điều khoản và Chính sách </font> của chúng tôi.</string>
+
 </resources>
