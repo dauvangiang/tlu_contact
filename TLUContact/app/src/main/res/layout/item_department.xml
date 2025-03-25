@@ -10,7 +10,7 @@
     android:paddingBottom="8dp">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageViewAvatar"
+        android:id="@+id/imageViewLogo"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="centerCrop"
@@ -31,21 +31,21 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
-        app:layout_constraintTop_toTopOf="@+id/imageViewAvatar"
-        tools:text="Nguyễn Văn Thắm" />
+        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
+        app:layout_constraintTop_toTopOf="@+id/imageViewLogo"
+        tools:text="Khoa Công nghệ thông tin" />
 
     <TextView
-        android:id="@+id/textViewPosition"
+        android:id="@+id/textViewPhone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:textColor="#757575"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageViewAvatar"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewLogo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
+        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
         app:layout_constraintTop_toBottomOf="@+id/textViewName"
-        tools:text="Giảng viên - Khoa CNTT" />
+        tools:text="0123456789" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

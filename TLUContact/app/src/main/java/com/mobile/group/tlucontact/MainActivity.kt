@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.mobile.group.tlucontact.fragment.ContactListFragment
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationView
+import com.mobile.group.tlucontact.fragment.StaffListFragment
 
 class MainActivity : AppCompatActivity() {
   
@@ -13,7 +14,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, ContactListFragment())
+                .replace(R.id.container, StaffListFragment())
                 .commit()
         }
 

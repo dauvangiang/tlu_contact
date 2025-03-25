@@ -36,7 +36,7 @@
         tools:text="Nguyễn Văn Thắm" />
 
     <TextView
-        android:id="@+id/textViewPosition"
+        android:id="@+id/textViewStudentInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -46,6 +46,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
         app:layout_constraintTop_toBottomOf="@+id/textViewName"
-        tools:text="Giảng viên - Khoa CNTT" />
+        tools:text="2251061907 - 64CNTT2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
