@@ -9,17 +9,30 @@
     android:paddingEnd="16dp"
     android:paddingBottom="8dp">
 
-    <ImageView
+<!--    <ImageView-->
+<!--        android:id="@+id/imageViewAvatar"-->
+<!--        android:layout_width="48dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:background="@drawable/circle_background"-->
+<!--        android:padding="2dp"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        android:src="@drawable/default_avatar"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageViewAvatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="@drawable/circle_background"
-        android:padding="2dp"
         android:scaleType="centerCrop"
         android:src="@drawable/default_avatar"
+        app:strokeWidth="4dp"
+        app:shapeAppearanceOverlay="@style/RoundedImage"
+        android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/textViewName"

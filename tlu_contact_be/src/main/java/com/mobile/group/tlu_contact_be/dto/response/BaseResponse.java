@@ -76,4 +76,5 @@ public class BaseResponse<T> implements Serializable {
     public BaseResponse(long totalRecord) {
         this.totalRecord = totalRecord;
     }
+
 }
