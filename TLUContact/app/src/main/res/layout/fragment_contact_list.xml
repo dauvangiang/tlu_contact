@@ -61,7 +61,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/imageViewAdd"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="#757575" />
+                app:tint="@color/second_black" />
 
             <!-- Add Icon on Far Right -->
             <ImageView
