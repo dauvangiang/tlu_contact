@@ -39,7 +39,6 @@
     <string name="terms_and_policy">Bằng cách đăng nhập, bạn đồng ý với <font color='#FF006CD9'>Điều khoản và Chính sách </font> của chúng tôi.</string>
     <string name="terms_text">Bằng cách đăng ký, bạn đồng ý với <b>Điều khoản và chính sách</b> của chúng tôi</string>
     <string name="password_title">Mật khẩu</string>
-    <string name="confirm_new_password">Nhập lại mật khẩu</string>
     <string name="edit_title">Chỉnh sửa</string>
 
 </resources>

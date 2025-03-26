@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="TLU Contact"
+        android:text="@string/app_name"
         android:textColor="@color/primary_blue"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -47,8 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="16dp"
-            android:paintFlags="0x08"
-            android:text="Đăng nhập"
+            android:text="@string/login_title"
             android:textColor="@color/primary_blue"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -57,7 +56,7 @@
             android:id="@+id/tv_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Đăng ký"
+            android:text="@string/register_title"
             android:textColor="@color/primary_blue"
             android:textSize="16sp" />
     </LinearLayout>
@@ -77,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_email_24dp"
-            android:hint="Email"
+            android:hint="@string/email_title"
             android:inputType="textEmailAddress"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -98,7 +97,7 @@
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_lock"
             android:drawableEnd="@drawable/ic_visibility"
-            android:hint="Mật khẩu"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -118,7 +117,7 @@
             android:id="@+id/remember_me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ghi nhớ mật khẩu"
+            android:text="@string/remember_password"
             android:textSize="14sp"
             android:layout_weight="1" />
 
@@ -126,7 +125,7 @@
             android:id="@+id/forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quên mật khẩu"
+            android:text="@string/forgot_password"
             android:textColor="@color/primary_blue"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -139,7 +138,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/button_rounded"
-        android:text="Đăng nhập"
+        android:text="@string/login_title"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -153,7 +152,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center"
-        android:text="Bằng cách đăng nhập, bạn đồng ý với Điều khoản và Chính sách của chúng tôi."
+        android:text="@string/terms_and_policy"
         android:textAlignment="center"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
