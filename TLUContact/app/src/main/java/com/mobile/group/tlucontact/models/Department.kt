@@ -1,6 +1,5 @@
 package com.mobile.group.tlucontact.models
 
-import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -15,5 +14,9 @@ data class Department(
     val email: String,
     val fax: String,
     val parentUnit: String,
-    val type: String
-) : Parcelable
+    val type: String,
+    val avatarResId: Int // For local testing with drawable resources
+) : Parcelable {
+    val firstLetter: String
+        get() = name.first().uppercase()
+}

@@ -2,26 +2,17 @@ package com.mobile.group.tlucontact.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-data class Staff() : Parcelable{
-    constructor(parcel: Parcel) : this() {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Staff> {
-        override fun createFromParcel(parcel: Parcel): Staff {
-            return Staff(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Staff?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+@Parcelize
+data class Staff(
+    val staffId: String,
+    val fullName: String,
+    val position: String,
+    val phone: String,
+    val email: String,
+    val photoURL: String,
+    val unit: String,
+    val userID: String,
+    val avatarResId: Int
+) : Parcelable

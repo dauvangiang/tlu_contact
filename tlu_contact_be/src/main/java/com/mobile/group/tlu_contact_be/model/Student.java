@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Student {
-    String id;
     String studentId;
     String fullName;
     String photoURL;
@@ -19,4 +18,5 @@ public class Student {
     String address;
     String className;
     String unit;
+    String userID;
 }
