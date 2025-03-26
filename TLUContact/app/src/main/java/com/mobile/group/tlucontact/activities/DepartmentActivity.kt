@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.mobile.group.tlucontact.R
 import com.mobile.group.tlucontact.fragment.UnitDetailFragment
 
-class UnitActivity : AppCompatActivity() {
+class DepartmentActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
