@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     implementation(libs.androidx.slidingpanelayout)
+    implementation(libs.androidx.cardview)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
     testImplementation(libs.junit)

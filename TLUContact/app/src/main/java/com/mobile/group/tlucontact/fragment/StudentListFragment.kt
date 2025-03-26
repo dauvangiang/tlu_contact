@@ -1,6 +1,5 @@
 package com.mobile.group.tlucontact.fragment
 
-import Contact
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -15,17 +14,21 @@ import android.widget.ImageView
 import android.widget.Spinner
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.group.tlucontact.R
-import com.mobile.group.tlucontact.adapter.ContactAdapter
+import com.mobile.group.tlucontact.adapter.StudentAdapter
+import com.mobile.group.tlucontact.models.Student
+import com.mobile.group.tlucontact.databinding.FragmentStudentListBinding
 
-class ContactListFragment : Fragment() {
+class StudentListFragment : Fragment() {
+
+    private var _binding: FragmentStudentListBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ContactAdapter
+    private lateinit var adapter: StudentAdapter
     private lateinit var editTextSearch: EditText
     private lateinit var spinnerFilter: Spinner
     private lateinit var buttonSort: ImageButton
@@ -37,14 +40,20 @@ class ContactListFragment : Fragment() {
     private lateinit var imageViewAdd: ImageView
 
     private var isAscending = true
-    private val mockContacts = createMockData()
-    private lateinit var currDatas: MutableList<Contact>
+    private val mockStudents = createMockData()
+    private lateinit var currDatas: MutableList<Student>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_contact_list, container, false)
+    ): View {
+        _binding = FragmentStudentListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,10 +79,10 @@ class ContactListFragment : Fragment() {
     }
 
     private fun setupRecyclerView(context: Context) {
-        adapter = ContactAdapter(context, mockContacts)
+        adapter = StudentAdapter(context, mockStudents)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-        currDatas = mockContacts
+        currDatas = mockStudents
     }
 
     private fun setupSearch() {
@@ -117,23 +126,26 @@ class ContactListFragment : Fragment() {
     }
 
     private fun filter(text: String) {
-        val contacts = mutableListOf<Contact>()
+        val students = mutableListOf<Student>()
 
-        mockContacts.forEach { contact ->
-            if (contact.name.contains(text, ignoreCase = true) ||
-                contact.phone.contains(text) ||
-                contact.email.contains(text, ignoreCase = true)
+        mockStudents.forEach { student ->
+            if (student.fullName.contains(text, ignoreCase = true) ||
+                student.studentId.contains(text) ||
+                student.phone.contains(text) ||
+                student.email.contains(text, ignoreCase = true) ||
+                student.className.contains(text, ignoreCase = true) ||
+                student.unit.contains(text, ignoreCase = true)
             ) {
-                contacts.add(contact)
+                students.add(student)
             }
         }
 
-        currDatas = contacts
-        adapter.filter(contacts)
+        currDatas = students
+        adapter.filter(students)
     }
 
     private fun setupFilter() {
-        val filterOptions = arrayOf("Tất cả", "Giảng viên", "Sinh viên", "Nhân viên")
+        val filterOptions = arrayOf("Tất cả", "Khoa CNTT", "Khoa KTXD", "Khoa KTTC")
         val filterAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
@@ -144,16 +156,16 @@ class ContactListFragment : Fragment() {
 
         spinnerFilter.setOnItemSelectedListener { position ->
             val selectedFilter = filterOptions[position]
-            filterContacts(selectedFilter)
+            filterStudents(selectedFilter)
         }
     }
 
-    private fun filterContacts(filter: String) {
+    private fun filterStudents(filter: String) {
         if (filter == "Tất cả") {
-            adapter.filter(mockContacts)
-            currDatas = mockContacts
+            adapter.filter(mockStudents)
+            currDatas = mockStudents
         } else {
-            val filtered = mockContacts.filter { it.position == filter }.toMutableList()
+            val filtered = mockStudents.filter { it.unit == filter }.toMutableList()
             currDatas = filtered
             adapter.filter(filtered)
         }
@@ -168,33 +180,24 @@ class ContactListFragment : Fragment() {
         }
     }
 
-    private fun createMockData(): MutableList<Contact> {
-        // Your existing mock data
+    private fun createMockData(): MutableList<Student> {
         return mutableListOf(
-            Contact("1", "Nguyễn Văn An", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("2", "Trần Thị Bình", "0123456789", "ttb@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("3", "Lê Văn Cường", "0123456789", "lvc@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("4", "Phạm Thị Dung", "0123456789", "ptd@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("5", "Hoàng Văn Em", "0123456789", "hve@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("6", "Ngô Thị Phương", "0123456789", "ntp@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("7", "Đỗ Văn Giang", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("8", "Bùi Thị Hoa", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("9", "Nguyễn Văn Thắm", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("10", "Trần Văn Khánh", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("11", "Lê Thị Lan", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("12", "Phạm Văn Minh", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("13", "Hoàng Thị Ngọc", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("14", "Ngô Văn Oanh", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("15", "Đỗ Thị Phương", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("16", "Bùi Văn Quang", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("17", "Nguyễn Thị Rạng", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("18", "Trần Văn Sơn", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("19", "Lê Thị Tuyết", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("20", "Phạm Văn Uy", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("21", "Hoàng Thị Vân", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("22", "Ngô Văn Xuân", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("23", "Đỗ Thị Yến", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("24", "Bùi Văn Zương", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar)
+            Student("2251061001", "Nguyễn Văn An", "", "0123456789", "nva@gmail.com", "Hà Nội", "64CNTT1", "Khoa CNTT", "user1", R.drawable.cho),
+            Student("2251061002", "Trần Thị Bình", "", "0123456789", "ttb@gmail.com", "Hà Nội", "64CNTT1", "Khoa CNTT", "user2", R.drawable.cho),
+            Student("2251061003", "Lê Văn Cường", "", "0123456789", "lvc@gmail.com", "Hà Nội", "64CNTT1", "Khoa CNTT", "user3", R.drawable.cho),
+            Student("2251061004", "Phạm Thị Dung", "", "0123456789", "ptd@gmail.com", "Hà Nội", "64CNTT2", "Khoa CNTT", "user4", R.drawable.cho),
+            Student("2251061005", "Hoàng Văn Em", "", "0123456789", "hve@gmail.com", "Hà Nội", "64CNTT2", "Khoa CNTT", "user5", R.drawable.cho),
+            Student("2251061006", "Ngô Thị Phương", "", "0123456789", "ntp@gmail.com", "Hà Nội", "64CNTT2", "Khoa CNTT", "user6", R.drawable.cho),
+            Student("2251062001", "Đỗ Văn Giang", "", "0123456789", "dvg@gmail.com", "Hà Nội", "64KTXD1", "Khoa KTXD", "user7", R.drawable.cho),
+            Student("2251062002", "Bùi Thị Hoa", "", "0123456789", "bth@gmail.com", "Hà Nội", "64KTXD1", "Khoa KTXD", "user8", R.drawable.cho),
+            Student("2251062003", "Nguyễn Văn Thắm", "", "0123456789", "nvt@gmail.com", "Hà Nội", "64KTXD1", "Khoa KTXD", "user9", R.drawable.cho),
+            Student("2251062004", "Trần Văn Khánh", "", "0123456789", "tvk@gmail.com", "Hà Nội", "64KTXD2", "Khoa KTXD", "user10", R.drawable.cho),
+            Student("2251062005", "Lê Thị Lan", "", "0123456789", "ltl@gmail.com", "Hà Nội", "64KTXD2", "Khoa KTXD", "user11", R.drawable.cho),
+            Student("2251063001", "Phạm Văn Minh", "", "0123456789", "pvm@gmail.com", "Hà Nội", "64KTTC1", "Khoa KTTC", "user12", R.drawable.cho),
+            Student("2251063002", "Hoàng Thị Ngọc", "", "0123456789", "htn@gmail.com", "Hà Nội", "64KTTC1", "Khoa KTTC", "user13", R.drawable.cho),
+            Student("2251063003", "Ngô Văn Oanh", "", "0123456789", "nvo@gmail.com", "Hà Nội", "64KTTC1", "Khoa KTTC", "user14", R.drawable.cho),
+            Student("2251063004", "Đỗ Thị Phương", "", "0123456789", "dtp@gmail.com", "Hà Nội", "64KTTC2", "Khoa KTTC", "user15", R.drawable.cho),
+            Student("2251063005", "Bùi Văn Quang", "", "0123456789", "bvq@gmail.com", "Hà Nội", "64KTTC2", "Khoa KTTC", "user16", R.drawable.cho)
         )
     }
 }

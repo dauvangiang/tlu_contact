@@ -1,6 +1,5 @@
 package com.mobile.group.tlucontact.fragment
 
-import Contact
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -15,17 +14,21 @@ import android.widget.ImageView
 import android.widget.Spinner
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.group.tlucontact.R
-import com.mobile.group.tlucontact.adapter.ContactAdapter
+import com.mobile.group.tlucontact.adapter.DepartmentAdapter
+import com.mobile.group.tlucontact.models.Department
+import com.mobile.group.tlucontact.databinding.FragmentDepartmentListBinding
 
-class ContactListFragment : Fragment() {
+class DepartmentListFragment : Fragment() {
+
+    private var _binding: FragmentDepartmentListBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ContactAdapter
+    private lateinit var adapter: DepartmentAdapter
     private lateinit var editTextSearch: EditText
     private lateinit var spinnerFilter: Spinner
     private lateinit var buttonSort: ImageButton
@@ -37,14 +40,20 @@ class ContactListFragment : Fragment() {
     private lateinit var imageViewAdd: ImageView
 
     private var isAscending = true
-    private val mockContacts = createMockData()
-    private lateinit var currDatas: MutableList<Contact>
+    private val mockDepartments = createMockData()
+    private lateinit var currDatas: MutableList<Department>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_contact_list, container, false)
+    ): View {
+        _binding = FragmentDepartmentListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,10 +79,10 @@ class ContactListFragment : Fragment() {
     }
 
     private fun setupRecyclerView(context: Context) {
-        adapter = ContactAdapter(context, mockContacts)
+        adapter = DepartmentAdapter(context, mockDepartments)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-        currDatas = mockContacts
+        currDatas = mockDepartments
     }
 
     private fun setupSearch() {
@@ -117,23 +126,24 @@ class ContactListFragment : Fragment() {
     }
 
     private fun filter(text: String) {
-        val contacts = mutableListOf<Contact>()
+        val departments = mutableListOf<Department>()
 
-        mockContacts.forEach { contact ->
-            if (contact.name.contains(text, ignoreCase = true) ||
-                contact.phone.contains(text) ||
-                contact.email.contains(text, ignoreCase = true)
+        mockDepartments.forEach { department ->
+            if (department.name.contains(text, ignoreCase = true) ||
+                department.phone.contains(text, ignoreCase = true) ||
+            department.phone.contains(text) ||
+                    department.email.contains(text, ignoreCase = true)
             ) {
-                contacts.add(contact)
-            }
+            departments.add(department)
+        }
         }
 
-        currDatas = contacts
-        adapter.filter(contacts)
+        currDatas = departments
+        adapter.filter(departments)
     }
 
     private fun setupFilter() {
-        val filterOptions = arrayOf("Tất cả", "Giảng viên", "Sinh viên", "Nhân viên")
+        val filterOptions = arrayOf("Tất cả", "Khoa", "Phòng ban", "Trung tâm")
         val filterAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
@@ -144,16 +154,16 @@ class ContactListFragment : Fragment() {
 
         spinnerFilter.setOnItemSelectedListener { position ->
             val selectedFilter = filterOptions[position]
-            filterContacts(selectedFilter)
+            filterDepartments(selectedFilter)
         }
     }
 
-    private fun filterContacts(filter: String) {
+    private fun filterDepartments(filter: String) {
         if (filter == "Tất cả") {
-            adapter.filter(mockContacts)
-            currDatas = mockContacts
+            adapter.filter(mockDepartments)
+            currDatas = mockDepartments
         } else {
-            val filtered = mockContacts.filter { it.position == filter }.toMutableList()
+            val filtered = mockDepartments.filter { it.type == filter }.toMutableList()
             currDatas = filtered
             adapter.filter(filtered)
         }
@@ -168,33 +178,18 @@ class ContactListFragment : Fragment() {
         }
     }
 
-    private fun createMockData(): MutableList<Contact> {
-        // Your existing mock data
+    private fun createMockData(): MutableList<Department> {
         return mutableListOf(
-            Contact("1", "Nguyễn Văn An", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("2", "Trần Thị Bình", "0123456789", "ttb@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("3", "Lê Văn Cường", "0123456789", "lvc@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("4", "Phạm Thị Dung", "0123456789", "ptd@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("5", "Hoàng Văn Em", "0123456789", "hve@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("6", "Ngô Thị Phương", "0123456789", "ntp@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("7", "Đỗ Văn Giang", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("8", "Bùi Thị Hoa", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("9", "Nguyễn Văn Thắm", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("10", "Trần Văn Khánh", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("11", "Lê Thị Lan", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("12", "Phạm Văn Minh", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("13", "Hoàng Thị Ngọc", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("14", "Ngô Văn Oanh", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("15", "Đỗ Thị Phương", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("16", "Bùi Văn Quang", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("17", "Nguyễn Thị Rạng", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("18", "Trần Văn Sơn", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("19", "Lê Thị Tuyết", "0123456789", "nva@gmail.com", "Giảng viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("20", "Phạm Văn Uy", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("21", "Hoàng Thị Vân", "0123456789", "nva@gmail.com", "Nhân viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("22", "Ngô Văn Xuân", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("23", "Đỗ Thị Yến", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar),
-            Contact("24", "Bùi Văn Zương", "0123456789", "nva@gmail.com", "Sinh viên", "Khoa CNTT", R.drawable.user_avatar)
+            Department("1", "CNTT", "Khoa Công nghệ thông tin", "Nhà C1", "", "0243.8522201", "cntt@tlu.edu.vn", "0243.8522201", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
+            Department("2", "KTXD", "Khoa Kỹ thuật xây dựng", "Nhà C2", "", "0243.8522202", "ktxd@tlu.edu.vn", "0243.8522202", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
+            Department("3", "KTTC", "Khoa Kinh tế và Quản lý", "Nhà B1", "", "0243.8522203", "kttc@tlu.edu.vn", "0243.8522203", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
+            Department("4", "KTHH", "Khoa Kỹ thuật tài nguyên nước", "Nhà A5", "", "0243.8522204", "kthh@tlu.edu.vn", "0243.8522204", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
+            Department("5", "DAOTAO", "Phòng Đào tạo", "Nhà A1", "", "0243.8522205", "daotao@tlu.edu.vn", "0243.8522205", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
+            Department("6", "CTSV", "Phòng Công tác sinh viên", "Nhà A1", "", "0243.8522206", "ctsv@tlu.edu.vn", "0243.8522206", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
+            Department("7", "TCHC", "Phòng Tổ chức hành chính", "Nhà A1", "", "0243.8522207", "tchc@tlu.edu.vn", "0243.8522207", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
+            Department("8", "TTCNTT", "Trung tâm Công nghệ thông tin", "Nhà C1", "", "0243.8522208", "ttcntt@tlu.edu.vn", "0243.8522208", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho),
+            Department("9", "TTNN", "Trung tâm Ngoại ngữ", "Nhà A2", "", "0243.8522209", "ttnn@tlu.edu.vn", "0243.8522209", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho),
+            Department("10", "TTDVTH", "Trung tâm Dịch vụ tổng hợp", "Nhà A3", "", "0243.8522210", "ttdvth@tlu.edu.vn", "0243.8522210", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho)
         )
     }
 }

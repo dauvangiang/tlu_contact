@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.cloud.FirestoreClient;
+import com.mobile.group.tlu_contact_be.exceptions.CustomException;
 import com.mobile.group.tlu_contact_be.model.Student;
 import com.mobile.group.tlu_contact_be.model.User;
 import org.springframework.stereotype.Service;
@@ -59,9 +60,38 @@ public class StudentService {
         }
     }
 
-    public void updateStudent(String studentId, Student student) {
+    public Student updateStudent(String studentId, Student student) {
         try {
+            Student exitingStudent = getStudent(studentId);
+            if (exitingStudent == null) {
+                throw new CustomException("Student not found");
+            }
+            if(student.getFullName() == null) {
+                student.setFullName(exitingStudent.getFullName());
+            }
+            if(student.getPhotoURL() == null) {
+                student.setPhotoURL(exitingStudent.getPhotoURL());
+            }
+            if(student.getPhone() == null) {
+                student.setPhone(exitingStudent.getPhone());
+            }
+            if(student.getEmail() == null) {
+                student.setEmail(exitingStudent.getEmail());
+            }
+            if(student.getAddress() == null) {
+                student.setAddress(exitingStudent.getAddress());
+            }
+            if(student.getClassName() == null) {
+                student.setClassName(exitingStudent.getClassName());
+            }
+            if(student.getUnit() == null) {
+                student.setUnit(exitingStudent.getUnit());
+            }
+            if(student.getUserID() == null) {
+                student.setUserID(exitingStudent.getUserID());
+            }
             db.collection("students").document(studentId).set(student).get();
+            return student;
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Failed to update student", e);
         }

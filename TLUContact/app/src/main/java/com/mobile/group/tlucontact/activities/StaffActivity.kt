@@ -12,7 +12,7 @@ class StaffActivity : AppCompatActivity() {
         setContentView(R.layout.activity_staff_detail)
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, StaffDetailFragment()) // Load Fragment vào container
+            .replace(R.id.container, StaffDetailFragment())
             .commit()
     }
 }
