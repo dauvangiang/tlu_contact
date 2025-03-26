@@ -6,7 +6,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="primary_black">#FF000000</color>
-    <color name="white">#FFFFFFF</color>
+    <color name="white">#FFFFFFFF</color>
     <color name="primary_blue">#FF006CD9</color>
     <color name="second_blue">#489EFF</color>
     <color name="third_blue">#CCAAD4FF</color>
@@ -15,8 +15,6 @@
     <color name="error">#FFEC221F</color>
     <color name="success">#FF00D45B</color>
     <color name="success_border">#FF25FF6A</color>
-
-
     <color name="blue">#2196F3</color>
     <color name="dark_blue">#0D47A1</color>
 </resources>
