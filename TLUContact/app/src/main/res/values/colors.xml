@@ -15,4 +15,6 @@
     <color name="error">#FFEC221F</color>
     <color name="success">#FF00D45B</color>
     <color name="success_border">#FF25FF6A</color>
+    <color name="blue">#2196F3</color>
+    <color name="dark_blue">#0D47A1</color>
 </resources>
