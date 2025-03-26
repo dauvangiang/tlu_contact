@@ -20,8 +20,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobile.group.tlucontact.R
 import com.mobile.group.tlucontact.adapter.StaffAdapter
 import com.mobile.group.tlucontact.models.Staff
+import com.mobile.group.tlucontact.databinding.FragmentStaffListBinding
 
 class StaffListFragment : Fragment() {
+
+    private var _binding: FragmentStaffListBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: StaffAdapter
@@ -42,8 +46,14 @@ class StaffListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_contact_list, container, false)
+    ): View {
+        _binding = FragmentStaffListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -171,21 +181,21 @@ class StaffListFragment : Fragment() {
 
     private fun createMockData(): MutableList<Staff> {
         return mutableListOf(
-            Staff("GV001", "Nguyễn Văn An", "Giảng viên", "0123456789", "nva@tlu.edu.vn", "", "Khoa CNTT", "user1", R.drawable.user_avatar),
-            Staff("GV002", "Trần Thị Bình", "Giảng viên", "0123456789", "ttb@tlu.edu.vn", "", "Khoa CNTT", "user2", R.drawable.user_avatar),
-            Staff("GV003", "Lê Văn Cường", "Giảng viên", "0123456789", "lvc@tlu.edu.vn", "", "Khoa CNTT", "user3", R.drawable.user_avatar),
-            Staff("GV004", "Phạm Thị Dung", "Giảng viên", "0123456789", "ptd@tlu.edu.vn", "", "Khoa CNTT", "user4", R.drawable.user_avatar),
-            Staff("NV001", "Hoàng Văn Em", "Nhân viên", "0123456789", "hve@tlu.edu.vn", "", "Phòng Đào tạo", "user5", R.drawable.user_avatar),
-            Staff("NV002", "Ngô Thị Phương", "Nhân viên", "0123456789", "ntp@tlu.edu.vn", "", "Phòng CTSV", "user6", R.drawable.user_avatar),
-            Staff("QL001", "Đỗ Văn Giang", "Quản lý", "0123456789", "dvg@tlu.edu.vn", "", "Khoa CNTT", "user7", R.drawable.user_avatar),
-            Staff("QL002", "Bùi Thị Hoa", "Quản lý", "0123456789", "bth@tlu.edu.vn", "", "Phòng Đào tạo", "user8", R.drawable.user_avatar),
-            Staff("GV005", "Nguyễn Văn Thắm", "Giảng viên", "0123456789", "nvt@tlu.edu.vn", "", "Khoa CNTT", "user9", R.drawable.user_avatar),
-            Staff("GV006", "Trần Văn Khánh", "Giảng viên", "0123456789", "tvk@tlu.edu.vn", "", "Khoa KTXD", "user10", R.drawable.user_avatar),
-            Staff("GV007", "Lê Thị Lan", "Giảng viên", "0123456789", "ltl@tlu.edu.vn", "", "Khoa KTXD", "user11", R.drawable.user_avatar),
-            Staff("NV003", "Phạm Văn Minh", "Nhân viên", "0123456789", "pvm@tlu.edu.vn", "", "Phòng TCHC", "user12", R.drawable.user_avatar),
-            Staff("NV004", "Hoàng Thị Ngọc", "Nhân viên", "0123456789", "htn@tlu.edu.vn", "", "Phòng TCHC", "user13", R.drawable.user_avatar),
-            Staff("QL003", "Ngô Văn Oanh", "Quản lý", "0123456789", "nvo@tlu.edu.vn", "", "Khoa KTXD", "user14", R.drawable.user_avatar),
-            Staff("QL004", "Đỗ Thị Phương", "Quản lý", "0123456789", "dtp@tlu.edu.vn", "", "Phòng TCHC", "user15", R.drawable.user_avatar)
+            Staff("GV001", "Nguyễn Văn An", "Giảng viên", "0123456789", "nva@tlu.edu.vn", "", "Khoa CNTT", "user1", R.drawable.cho),
+            Staff("GV002", "Trần Thị Bình", "Giảng viên", "0123456789", "ttb@tlu.edu.vn", "", "Khoa CNTT", "user2", R.drawable.cho),
+            Staff("GV003", "Lê Văn Cường", "Giảng viên", "0123456789", "lvc@tlu.edu.vn", "", "Khoa CNTT", "user3", R.drawable.cho),
+            Staff("GV004", "Phạm Thị Dung", "Giảng viên", "0123456789", "ptd@tlu.edu.vn", "", "Khoa CNTT", "user4", R.drawable.cho),
+            Staff("NV001", "Hoàng Văn Em", "Nhân viên", "0123456789", "hve@tlu.edu.vn", "", "Phòng Đào tạo", "user5", R.drawable.cho),
+            Staff("NV002", "Ngô Thị Phương", "Nhân viên", "0123456789", "ntp@tlu.edu.vn", "", "Phòng CTSV", "user6", R.drawable.cho),
+            Staff("QL001", "Đỗ Văn Giang", "Quản lý", "0123456789", "dvg@tlu.edu.vn", "", "Khoa CNTT", "user7", R.drawable.cho),
+            Staff("QL002", "Bùi Thị Hoa", "Quản lý", "0123456789", "bth@tlu.edu.vn", "", "Phòng Đào tạo", "user8", R.drawable.cho),
+            Staff("GV005", "Nguyễn Văn Thắm", "Giảng viên", "0123456789", "nvt@tlu.edu.vn", "", "Khoa CNTT", "user9", R.drawable.cho),
+            Staff("GV006", "Trần Văn Khánh", "Giảng viên", "0123456789", "tvk@tlu.edu.vn", "", "Khoa KTXD", "user10", R.drawable.cho),
+            Staff("GV007", "Lê Thị Lan", "Giảng viên", "0123456789", "ltl@tlu.edu.vn", "", "Khoa KTXD", "user11", R.drawable.cho),
+            Staff("NV003", "Phạm Văn Minh", "Nhân viên", "0123456789", "pvm@tlu.edu.vn", "", "Phòng TCHC", "user12", R.drawable.cho),
+            Staff("NV004", "Hoàng Thị Ngọc", "Nhân viên", "0123456789", "htn@tlu.edu.vn", "", "Phòng TCHC", "user13", R.drawable.cho),
+            Staff("QL003", "Ngô Văn Oanh", "Quản lý", "0123456789", "nvo@tlu.edu.vn", "", "Khoa KTXD", "user14", R.drawable.cho),
+            Staff("QL004", "Đỗ Thị Phương", "Quản lý", "0123456789", "dtp@tlu.edu.vn", "", "Phòng TCHC", "user15", R.drawable.cho)
         )
     }
 }

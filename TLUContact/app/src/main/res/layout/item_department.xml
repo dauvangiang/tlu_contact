@@ -11,11 +11,11 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:scaleType="centerCrop"
         android:src="@drawable/default_avatar"
-        app:strokeWidth="4dp"
+        app:strokeWidth="0dp"
         app:shapeAppearanceOverlay="@style/RoundedImage"
         android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"

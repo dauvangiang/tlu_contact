@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- Container cho header và search -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/headerContainer"
         android:layout_width="0dp"
@@ -40,15 +39,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:paddingEnd="32dp" />
+                    android:paddingEnd="20dp"
+                    tools:ignore="RtlSymmetry" />
 
                 <ImageView
                     android:id="@+id/imageViewDropdown"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
-                    android:src="@drawable/drop_list_filter"
-                    app:tint="#757575" />
+                    android:src="@drawable/ic_dropdown" />
             </FrameLayout>
 
             <!-- Search Icon on Right -->
