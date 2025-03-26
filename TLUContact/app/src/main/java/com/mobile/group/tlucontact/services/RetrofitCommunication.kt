@@ -12,12 +12,13 @@ class RetrofitCommunication {
         private val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
         fun <T> build(classType: Class<T>, urlKey: String): T {
-            val remoteConfig = FirebaseRemoteConfig.getInstance()
-            val apiUrl = remoteConfig.getString(urlKey)
-            remoteConfig.getBoolean("feature_x_enabled")
+//            val remoteConfig = FirebaseRemoteConfig.getInstance()
+//            val apiUrl = remoteConfig.getString(urlKey)
+//            remoteConfig.getBoolean("feature_x_enabled")
 
             return Retrofit.Builder()
-                .baseUrl(apiUrl)
+//                .baseUrl(apiUrl)
+                .baseUrl("http://192.168.0.102:8080")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(buildCommunication())
                 .build()

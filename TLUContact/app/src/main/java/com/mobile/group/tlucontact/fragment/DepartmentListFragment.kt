@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,15 +13,20 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.group.tlucontact.R
 import com.mobile.group.tlucontact.adapter.DepartmentAdapter
 import com.mobile.group.tlucontact.models.Department
 import com.mobile.group.tlucontact.databinding.FragmentDepartmentListBinding
+import com.mobile.group.tlucontact.services.department.DepartmentService
+import com.mobile.group.tlucontact.services.department.DepartmentServiceImpl
+import kotlinx.coroutines.launch
 
 class DepartmentListFragment : Fragment() {
 
@@ -40,13 +46,17 @@ class DepartmentListFragment : Fragment() {
     private lateinit var imageViewAdd: ImageView
 
     private var isAscending = true
-    private val mockDepartments = createMockData()
+    private var mockDepartments: MutableList<Department> = mutableListOf()
     private lateinit var currDatas: MutableList<Department>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        lifecycleScope.launch {
+            mockDepartments = createMockData()
+            Toast.makeText(requireContext(), mockDepartments.size.toString(), Toast.LENGTH_SHORT).show()
+        }
         _binding = FragmentDepartmentListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -178,19 +188,25 @@ class DepartmentListFragment : Fragment() {
         }
     }
 
-    private fun createMockData(): MutableList<Department> {
-        return mutableListOf(
-            Department("1", "CNTT", "Khoa Công nghệ thông tin", "Nhà C1", "", "0243.8522201", "cntt@tlu.edu.vn", "0243.8522201", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
-            Department("2", "KTXD", "Khoa Kỹ thuật xây dựng", "Nhà C2", "", "0243.8522202", "ktxd@tlu.edu.vn", "0243.8522202", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
-            Department("3", "KTTC", "Khoa Kinh tế và Quản lý", "Nhà B1", "", "0243.8522203", "kttc@tlu.edu.vn", "0243.8522203", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
-            Department("4", "KTHH", "Khoa Kỹ thuật tài nguyên nước", "Nhà A5", "", "0243.8522204", "kthh@tlu.edu.vn", "0243.8522204", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
-            Department("5", "DAOTAO", "Phòng Đào tạo", "Nhà A1", "", "0243.8522205", "daotao@tlu.edu.vn", "0243.8522205", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
-            Department("6", "CTSV", "Phòng Công tác sinh viên", "Nhà A1", "", "0243.8522206", "ctsv@tlu.edu.vn", "0243.8522206", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
-            Department("7", "TCHC", "Phòng Tổ chức hành chính", "Nhà A1", "", "0243.8522207", "tchc@tlu.edu.vn", "0243.8522207", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
-            Department("8", "TTCNTT", "Trung tâm Công nghệ thông tin", "Nhà C1", "", "0243.8522208", "ttcntt@tlu.edu.vn", "0243.8522208", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho),
-            Department("9", "TTNN", "Trung tâm Ngoại ngữ", "Nhà A2", "", "0243.8522209", "ttnn@tlu.edu.vn", "0243.8522209", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho),
-            Department("10", "TTDVTH", "Trung tâm Dịch vụ tổng hợp", "Nhà A3", "", "0243.8522210", "ttdvth@tlu.edu.vn", "0243.8522210", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho)
-        )
+    private suspend fun createMockData(): MutableList<Department> {
+        val departmentService = DepartmentServiceImpl()
+        val token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjMwYjIyMWFiNjU2MTdiY2Y4N2VlMGY4NDYyZjc0ZTM2NTIyY2EyZTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGx1LWNvbnRhY3QtYzBjNjkiLCJhdWQiOiJ0bHUtY29udGFjdC1jMGM2OSIsImF1dGhfdGltZSI6MTc0MzAxMDk3NywidXNlcl9pZCI6IjFoMXdZZ0R1c3hWdWZ4MVFXOUNlVmFCamlnejEiLCJzdWIiOiIxaDF3WWdEdXN4VnVmeDFRVzlDZVZhQmppZ3oxIiwiaWF0IjoxNzQzMDEwOTc3LCJleHAiOjE3NDMwMTQ1NzcsImVtYWlsIjoiMjI1MTA2MTc2M0BlLnRsdS5lZHUudm4iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiMjI1MTA2MTc2M0BlLnRsdS5lZHUudm4iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.H0mzb36UNJr_VfvOu0fgk53zPaF-HnRJ-t3fEWi49_xvHuX30jWsu7vtbsH4X6qv4LSPV-b5GrSAmM9jwFXHdt4YjpO3x-PZ9hYYQczdIxiHKJqs5xTVspbGeUQUMvqTdt_1GRmReJmxP3C_LybGECB9z8QPUwNhXh0GWe41CGBqQlms6M3A_gP3ARRVya9NfZcv4oK0snuOfkBz6SQwVexvzkoFy_oh6GgFz6_-QgRedZPiqaO1ySwzuRA-GFOBOlod1Rf23cLIUBkDJQaEKV8aJKRYD3UbW0osW6YPlu0fmXHYlJqDYzXg24p9_mgbQY1jpPS-5gar1j6JoSSsxQ"
+
+        Toast.makeText(requireContext(), token, Toast.LENGTH_SHORT).show()
+        return departmentService.getDepartments(token, 0, 10) ?: mutableListOf()
+
+//        return mutableListOf(
+//            Department("1", "CNTT", "Khoa Công nghệ thông tin", "Nhà C1", "", "0243.8522201", "cntt@tlu.edu.vn", "0243.8522201", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
+//            Department("2", "KTXD", "Khoa Kỹ thuật xây dựng", "Nhà C2", "", "0243.8522202", "ktxd@tlu.edu.vn", "0243.8522202", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
+//            Department("3", "KTTC", "Khoa Kinh tế và Quản lý", "Nhà B1", "", "0243.8522203", "kttc@tlu.edu.vn", "0243.8522203", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
+//            Department("4", "KTHH", "Khoa Kỹ thuật tài nguyên nước", "Nhà A5", "", "0243.8522204", "kthh@tlu.edu.vn", "0243.8522204", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
+//            Department("5", "DAOTAO", "Phòng Đào tạo", "Nhà A1", "", "0243.8522205", "daotao@tlu.edu.vn", "0243.8522205", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
+//            Department("6", "CTSV", "Phòng Công tác sinh viên", "Nhà A1", "", "0243.8522206", "ctsv@tlu.edu.vn", "0243.8522206", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
+//            Department("7", "TCHC", "Phòng Tổ chức hành chính", "Nhà A1", "", "0243.8522207", "tchc@tlu.edu.vn", "0243.8522207", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
+//            Department("8", "TTCNTT", "Trung tâm Công nghệ thông tin", "Nhà C1", "", "0243.8522208", "ttcntt@tlu.edu.vn", "0243.8522208", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho),
+//            Department("9", "TTNN", "Trung tâm Ngoại ngữ", "Nhà A2", "", "0243.8522209", "ttnn@tlu.edu.vn", "0243.8522209", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho),
+//            Department("10", "TTDVTH", "Trung tâm Dịch vụ tổng hợp", "Nhà A3", "", "0243.8522210", "ttdvth@tlu.edu.vn", "0243.8522210", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho)
+//        )
     }
 }
 

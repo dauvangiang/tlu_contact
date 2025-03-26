@@ -7,6 +7,6 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface DepartmentCommunicate {
-    @GET("/api/v1/departments")
-    fun getDepartments(@Header("Authorization") token: String, @Query("page") page: Int, @Query("size") size: Int) : Call<List<Department>>
+    @GET("http://localhost:8080/api/v1/departments")
+    fun getDepartments(@Header("Authorization") token: String, @Query("page") page: Int, @Query("size") size: Int) : Call<MutableList<Department>>
 }
