@@ -13,7 +13,7 @@ class DepartmentServiceImpl : DepartmentService {
     private val communicate = RetrofitCommunication.build(DepartmentCommunicate::class.java, "contact_api_url")
 
     override suspend fun getDepartments(token: String, page: Int, size: Int): MutableList<Department>? {
-        val call: Call<MutableList<Department>> = communicate.getDepartments(token, page, size)
+        val call: Call<MutableList<Department>> = communicate.getDepartments(token)
         return withContext(Dispatchers.IO) {
             try {
                 val response = call.execute()

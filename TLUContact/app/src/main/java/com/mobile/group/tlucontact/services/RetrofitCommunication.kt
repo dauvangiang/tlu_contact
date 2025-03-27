@@ -18,7 +18,7 @@ class RetrofitCommunication {
 
             return Retrofit.Builder()
 //                .baseUrl(apiUrl)
-                .baseUrl("http://192.168.43.200:8080/")
+                .baseUrl("https://tlu-contact-1-0-0.onrender.com/")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(buildCommunication())
                 .build()
