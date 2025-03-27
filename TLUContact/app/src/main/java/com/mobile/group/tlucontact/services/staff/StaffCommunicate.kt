@@ -7,6 +7,6 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface StaffCommunicate {
-    @GET("/api/v1/staffs")
+    @GET("api/v1/staffs")
     fun getStaffs(@Header("Authorization") token: String, @Query("page") page: Int, @Query("size") size: Int) : Call<List<Staff>>
 }

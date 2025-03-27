@@ -18,7 +18,7 @@ class RetrofitCommunication {
 
             return Retrofit.Builder()
 //                .baseUrl(apiUrl)
-                .baseUrl("http://192.168.0.102:8080")
+                .baseUrl("http://192.168.43.200:8080/")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(buildCommunication())
                 .build()

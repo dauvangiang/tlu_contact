@@ -7,6 +7,6 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface StudentCommunicate {
-    @GET("/api/v1/students")
+    @GET("api/v1/students")
     fun getStudents(@Header("Authorization") token: String, @Query("page") page: Int, @Query("size") size: Int) : Call<List<Student>>
 }
