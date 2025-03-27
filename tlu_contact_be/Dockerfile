@@ -1,26 +1,31 @@
-# Sử dụng hình ảnh JDK 23 chính thức làm base image
-FROM eclipse-temurin:23-jdk AS builder
+# Stage 1: Build ứng dụng
+FROM maven:3.9.9-eclipse-temurin-23 AS builder
 
-# Thiết lập thư mục làm việc trong container
+# Đặt thư mục làm việc
 WORKDIR /app
 
-# Sao chép toàn bộ thư mục backend vào container
-COPY ./tlu_contact_be /app/
+# Sao chép file pom.xml và tải dependencies trước để tận dụng cache
+COPY ./pom.xml .
+RUN mvn dependency:go-offline
 
-# Build dự án Spring Boot bằng Maven Wrapper
-RUN chmod +x mvnw && ./mvnw clean package -DskipTests
+# Sao chép toàn bộ mã nguồn và build ứng dụng
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Giai đoạn chạy ứng dụng
-FROM eclipse-temurin:23-jre AS runtime
+# Stage 2: Tạo image chạy ứng dụng
+FROM eclipse-temurin:23-jre
 
-# Thiết lập thư mục làm việc
+# Đặt thư mục làm việc
 WORKDIR /app
 
-# Sao chép file JAR đã build từ giai đoạn trước
+# Sao chép file JAR từ stage build
 COPY --from=builder /app/target/*.jar app.jar
 
-# Mở cổng mà Spring Boot sử dụng (mặc định là 8080)
+# Expose port
 EXPOSE 8080
 
+# Thiết lập biến môi trường
+ENV JAVA_OPTS=""
+
 # Chạy ứng dụng
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
