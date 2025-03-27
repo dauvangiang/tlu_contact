@@ -8,14 +8,17 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.cloud.FirestoreClient;
 import com.mobile.group.tlu_contact_be.dto.request.auth.UserLoginReq;
-import com.mobile.group.tlu_contact_be.dto.request.user.AddUserReq;
+import com.mobile.group.tlu_contact_be.dto.request.user.CreateUserReq;
 import com.mobile.group.tlu_contact_be.exceptions.CustomException;
 import com.mobile.group.tlu_contact_be.model.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,6 +32,8 @@ public class UserService {
 
     private final Firestore db;
     private final FirebaseAuth firebaseAuth;
+    @Autowired
+    private EmailService emailService;
     @Value("${firebase.api.key}")
     private String FIREBASE_API_KEY;
 
@@ -37,7 +42,7 @@ public class UserService {
         this.firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    public UserRecord register(AddUserReq request) {
+    public UserRecord register(CreateUserReq request) {
         if (checkEmailExists(request.getEmail())) {
             throw new CustomException("Email đã tồn tại.");
         }
@@ -45,20 +50,21 @@ public class UserService {
         UserRecord.CreateRequest newUser = new UserRecord.CreateRequest()
                 .setEmail(request.getEmail())
                 .setPassword(request.getPassword())
-                .setDisplayName(request.getDisplayName())
-                .setPhoneNumber(request.getPhoneNumber())
-                .setPhotoUrl(request.getPhotoUrl());
-
+                .setEmailVerified(false);
         try {
             UserRecord userRecord = firebaseAuth.createUser(newUser);
             saveUserToFirestore(userRecord.getUid(), request);
+            String link = firebaseAuth.generateEmailVerificationLink(userRecord.getEmail());
+            emailService.sendCustomEmail(request.getEmail(), link);
+
             return userRecord;
         } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
     }
 
-    private void saveUserToFirestore(String uid, AddUserReq request) {
+    @Async
+    void saveUserToFirestore(String uid, CreateUserReq request) {
         Role role = null;
         if(request.getEmail().endsWith("@tlu.edu.vn")){
             role = Role.STAFF;
@@ -111,7 +117,6 @@ public class UserService {
         }
     }
 
-
     public User getUser(String id) {
         try {
             DocumentReference docRef = db.collection("users").document(id);
@@ -124,10 +129,9 @@ public class UserService {
             }
             return null;
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to get user", e);
+            throw new CustomException("Failed to get user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
@@ -141,25 +145,23 @@ public class UserService {
             }
             return users;
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to get all users", e);
+            throw new CustomException("Failed to get all users", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     public void updateUser(String id, User user) {
         try {
             db.collection("users").document(id).set(user).get();  // Sử dụng UID làm ID
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to update user", e);
+            throw new CustomException("Failed to update user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     public void deleteUser(String id) {
         try {
             db.collection("users").document(id).delete().get(); // Sử dụng UID làm ID
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to delete user", e);
+            throw new CustomException("Failed to delete user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

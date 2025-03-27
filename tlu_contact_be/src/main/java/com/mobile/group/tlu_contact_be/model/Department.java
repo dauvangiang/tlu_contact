@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Unit {
+public class Department {
     String id;
     String code;
     String name;
@@ -18,6 +18,7 @@ public class Unit {
     String phone;
     String email;
     String fax;
-    String parentUnit;
+    String parentDepartment;
     String type;
+    Boolean deleted = false;
 }
