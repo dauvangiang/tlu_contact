@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Staff {
-    String id;
     String staffId;
     String fullName;
     String position;
@@ -18,4 +17,5 @@ public class Staff {
     String email;
     String photoURL;
     String unit;
+    String userID;
 }

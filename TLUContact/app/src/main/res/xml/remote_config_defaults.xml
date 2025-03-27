@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry key="contact_api_url" value="http://localhost:8080"/>
+    <entry key="feature_x_enabled" value="false"/>
+</defaultsMap>

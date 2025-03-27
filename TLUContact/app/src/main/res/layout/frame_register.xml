@@ -1,7 +1,115 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="20dp"
+    android:background="@android:color/white">
+
+    <!-- Logo -->
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/tlu"
+        android:contentDescription="Logo"/>
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_blue"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:id="@+id/tv_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_title"
+            android:textColor="@color/second_black"
+            android:textSize="16sp"
+            android:paddingEnd="12dp"/>
+
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_title"
+            android:textColor="@color/primary_blue"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <!-- Email -->
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/email_title"
+        android:drawableStart="@drawable/ic_email_24dp"
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Họ tên -->
+    <EditText
+        android:id="@+id/full_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/person_title"
+        android:drawableStart="@drawable/ic_person"
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:inputType="text"
+        android:layout_marginTop="12dp"/>
+
+    <!-- Mã cán bộ/mã sinh viên -->
+    <EditText
+        android:id="@+id/id_person"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/id_person"
+        android:drawableStart="@drawable/ic_lock"
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:layout_marginTop="12dp"/>
+
+    <!-- Nút tiếp theo -->
+    <Button
+        android:id="@+id/btn_next_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/next_password"
+        android:background="@drawable/button_round"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Điều khoản -->
+    <TextView
+        android:id="@+id/tv_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/terms_text"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="20dp"
+        android:textColor="@color/second_black" />
+
+
+
+
 
 </LinearLayout>

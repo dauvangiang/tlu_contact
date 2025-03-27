@@ -1,6 +1,9 @@
 package com.mobile.group.tlucontact.adapter
 
 import Contact
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,117 +11,105 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobile.group.tlucontact.R
+import com.mobile.group.tlucontact.activities.ContactDetailActivity
+import java.text.Collator
+import java.util.Locale
 
-class ContactAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ContactAdapter(private val context: Context, var contacts: MutableList<Contact>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val TYPE_HEADER = 0
         private const val TYPE_CONTACT = 1
     }
 
-    private var items: List<ContactListItem> = emptyList()
-    private var filteredItems: List<ContactListItem> = emptyList()
+    private var isAscending = true
+    private lateinit var items: MutableList<Any>
 
-    fun setData(contacts: List<Contact>) {
-        // Group contacts by first letter and create headers
-        val groupedContacts = contacts.groupBy { it.firstLetter }
-            .toSortedMap()
-            .flatMap { (letter, contactsInGroup) ->
-                listOf(ContactListItem.Header(letter)) +
-                        contactsInGroup.map { ContactListItem.ContactItem(it) }
-            }
-
-        items = groupedContacts
-        filteredItems = groupedContacts
-        notifyDataSetChanged()
+    init {
+        setSortedList(contacts, isAscending)
     }
 
-    fun filter(query: String) {
-        if (query.isEmpty()) {
-            filteredItems = items
-        } else {
-            // Filter contacts and rebuild the list with headers
-            val filteredContacts = items.filterIsInstance<ContactListItem.ContactItem>()
-                .filter { it.contact.name.contains(query, ignoreCase = true) }
-                .groupBy { it.contact.firstLetter }
-                .toSortedMap()
-                .flatMap { (letter, contactsInGroup) ->
-                    listOf(ContactListItem.Header(letter)) + contactsInGroup
-                }
+    @SuppressLint("NotifyDataSetChanged")
+    fun setSortedList(contacts: MutableList<Contact>, ascending: Boolean) {
+        isAscending = ascending
 
-            filteredItems = filteredContacts
+        val collator: Collator = Collator.getInstance(Locale("vi", "VN")).apply {
+            strength = Collator.PRIMARY
         }
+        contacts.sortWith { s1, s2 ->
+            if (isAscending) collator.compare(s1.name, s2.name)
+            else collator.compare(s2.name, s1.name)
+        }
+
+        val groupedContacts = linkedMapOf<String, MutableList<Contact>>()
+        for (contact in contacts) {
+            val firstLetter = contact.name.substring(0,1).uppercase()
+            groupedContacts.putIfAbsent(firstLetter, mutableListOf())
+            groupedContacts[firstLetter]?.add(contact)
+        }
+
+        items = mutableListOf()
+        for ((key, value) in groupedContacts) {
+            items.add(key)
+            items.addAll(value)
+        }
+
         notifyDataSetChanged()
-    }
-
-    fun sort(ascending: Boolean) {
-        // Extract contacts, sort them, and rebuild the list with headers
-        val contacts = items.filterIsInstance<ContactListItem.ContactItem>()
-            .map { it.contact }
-            .let {
-                if (ascending) it.sortedBy { contact -> contact.name }
-                else it.sortedByDescending { contact -> contact.name }
-            }
-
-        setData(contacts)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (filteredItems[position]) {
-            is ContactListItem.Header -> TYPE_HEADER
-            is ContactListItem.ContactItem -> TYPE_CONTACT
-        }
+        return if (items[position] is String) TYPE_HEADER else TYPE_CONTACT
+    }
+
+    fun filter(filteredContacts: MutableList<Contact>) {
+        setSortedList(filteredContacts, isAscending)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            TYPE_HEADER -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_contact_header, parent, false)
-                HeaderViewHolder(view)
-            }
-            TYPE_CONTACT -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_contact, parent, false)
-                ContactViewHolder(view)
-            }
-            else -> throw IllegalArgumentException("Invalid view type")
+        val inflater = LayoutInflater.from(parent.context)
+        return if (viewType == TYPE_HEADER) {
+            val view = inflater.inflate(R.layout.item_contact_header, parent, false)
+            HeaderViewHolder(view)
+        } else {
+            val view = inflater.inflate(R.layout.item_contact, parent, false)
+            ContactViewHolder(view)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (val item = filteredItems[position]) {
-            is ContactListItem.Header -> (holder as HeaderViewHolder).bind(item)
-            is ContactListItem.ContactItem -> (holder as ContactViewHolder).bind(item.contact)
+        if (holder is HeaderViewHolder) {
+            holder.bind(items[position] as String)
+        } else {
+            val contact = items[position] as Contact
+            (holder as ContactViewHolder).bind(contact)
+            holder.itemView.setOnClickListener {
+                val intent = Intent(context, ContactDetailActivity::class.java).apply {
+                    putExtra("contactSelected", contact)
+                }
+                context.startActivity(intent)
+            }
         }
     }
 
-    override fun getItemCount(): Int = filteredItems.size
+    override fun getItemCount(): Int = items.size
 
-    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val textViewHeader: TextView = itemView.findViewById(R.id.textViewHeader)
+    class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val tvHeader: TextView = view.findViewById(R.id.header_text)
 
-        fun bind(header: ContactListItem.Header) {
-            textViewHeader.text = header.letter
+        fun bind(header: String) {
+            tvHeader.text = header
         }
     }
 
-    class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ContactViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val imageViewAvatar: ImageView = itemView.findViewById(R.id.imageViewAvatar)
         private val textViewName: TextView = itemView.findViewById(R.id.textViewName)
-        private val textViewPosition: TextView = itemView.findViewById(R.id.textViewPosition)
+        private val textViewPosition: TextView = view.findViewById(R.id.textViewPosition)
 
         fun bind(contact: Contact) {
             textViewName.text = contact.name
             textViewPosition.text = contact.displayPosition
-
-            // Sử dụng setImageResource thay vì Glide
             imageViewAvatar.setImageResource(contact.avatarResId)
         }
     }
-}
-
-sealed class ContactListItem {
-    data class Header(val letter: String) : ContactListItem()
-    data class ContactItem(val contact: Contact) : ContactListItem()
 }
