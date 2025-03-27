@@ -5,11 +5,11 @@ FROM maven:3.9.9-eclipse-temurin-23 AS builder
 WORKDIR /app
 
 # Sao chép file pom.xml và tải dependencies trước để tận dụng cache
-COPY ./pom.xml .
+COPY ./tlu_contact_be/pom.xml .
 RUN mvn dependency:go-offline
 
 # Sao chép toàn bộ mã nguồn và build ứng dụng
-COPY . .
+COPY ./tlu_contact_be .
 RUN mvn clean package -DskipTests
 
 # Stage 2: Tạo image chạy ứng dụng
