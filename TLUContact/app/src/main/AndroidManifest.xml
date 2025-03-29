@@ -13,7 +13,7 @@
         android:theme="@style/Theme.TLUContact"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.TLUContact">
@@ -23,6 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.RegisterActivity" android:exported="false"/>
+        <activity android:name=".activities.RegisterFinalActivity" android:exported="false"/>
+        <activity android:name=".activities.UnitActivity" android:exported="false"/>
+        <activity android:name=".activities.StudentActivity" android:exported="false"/>
+        <activity android:name=".activities.StaffActivity" android:exported="false"/>
     </application>
 
 </manifest>

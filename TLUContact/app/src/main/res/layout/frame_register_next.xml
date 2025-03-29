@@ -8,12 +8,12 @@
     android:background="@android:color/white">
 
     <!-- Logo -->
-    <ImageView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/tlu"
-        android:contentDescription="Logo"
-        android:layout_marginBottom="20dp"/>
+<!--    <ImageView-->
+<!--        android:layout_width="120dp"-->
+<!--        android:layout_height="120dp"-->
+<!--        android:src="@drawable/tlu"-->
+<!--        android:contentDescription="Logo"-->
+<!--        android:layout_marginBottom="20dp"/>-->
 
     <!-- Tiêu đề -->
     <TextView
@@ -51,10 +51,43 @@
             android:textStyle="bold"
             android:textSize="16dp"/>
     </LinearLayout>
-
-    <!-- Mật khẩu mới -->
+    <!-- Họ tên -->
     <EditText
-        android:id="@+id/new_password"
+        android:id="@+id/edt_full_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/person_title"
+        android:drawableStart="@drawable/ic_person"
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:inputType="text"
+        android:layout_marginTop="12dp"/>
+
+    <!-- Mã cán bộ/mã sinh viên -->
+    <EditText
+        android:id="@+id/edt_id_staff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/id_person"
+        android:drawableStart="@drawable/ic_lock"
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:layout_marginTop="12dp"/>
+    <!-- Email -->
+    <EditText
+        android:id="@+id/edt_email_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/email_title"
+        android:drawableStart="@drawable/ic_email_24dp"
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Mật khẩu -->
+    <EditText
+        android:id="@+id/edt_password_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password_title"
@@ -67,7 +100,7 @@
 
     <!-- Nhập lại mật khẩu -->
     <EditText
-        android:id="@+id/confirm_password"
+        android:id="@+id/edt_confirm_password_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/confirm_new_password"
@@ -78,39 +111,39 @@
         android:inputType="textPassword"
         android:layout_marginBottom="16dp"/>
 
-    <!-- OTP -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="20dp">
+<!--    &lt;!&ndash; OTP &ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:layout_marginBottom="20dp">-->
 
-        <EditText
-            android:id="@+id/otp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Mã OTP"
-            android:drawableStart="@drawable/ic_lock"
-            android:padding="12dp"
-            android:textSize="14sp"
-            android:inputType="number"/>
+<!--        <EditText-->
+<!--            android:id="@+id/otp"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:hint="Mã OTP"-->
+<!--            android:drawableStart="@drawable/ic_lock"-->
+<!--            android:padding="12dp"-->
+<!--            android:textSize="14sp"-->
+<!--            android:inputType="number"/>-->
 
-        <Button
-            android:id="@+id/btn_send_otp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gửi OTP"
-            android:textColor="@android:color/white"
-            android:background="@drawable/button_round"
-            android:paddingHorizontal="16dp"
-            android:layout_marginStart="10dp"/>
-    </LinearLayout>
+<!--        <Button-->
+<!--            android:id="@+id/btn_send_otp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Gửi OTP"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:background="@drawable/button_round"-->
+<!--            android:paddingHorizontal="16dp"-->
+<!--            android:layout_marginStart="10dp"/>-->
+<!--    </LinearLayout>-->
 
     <!-- Nút đăng ký -->
     <Button
-        android:id="@+id/btn_next_register"
+        android:id="@+id/btn_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/register_title"

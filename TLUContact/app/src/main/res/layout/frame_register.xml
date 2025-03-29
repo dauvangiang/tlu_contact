@@ -52,7 +52,7 @@
 
     <!-- Email -->
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/edt_email_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/email_title"
@@ -64,7 +64,7 @@
 
     <!-- Họ tên -->
     <EditText
-        android:id="@+id/full_name"
+        android:id="@+id/edt_full_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/person_title"
@@ -76,7 +76,7 @@
 
     <!-- Mã cán bộ/mã sinh viên -->
     <EditText
-        android:id="@+id/id_person"
+        android:id="@+id/edt_id_staff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/id_person"
