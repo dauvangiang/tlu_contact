@@ -3,6 +3,8 @@ package com.mobile.group.tlu_contact_be.model;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -10,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Department {
-    String id;
     String code;
     String name;
     String address;
@@ -18,7 +19,8 @@ public class Department {
     String phone;
     String email;
     String fax;
-    String parentDepartment;
+    String parentDepartmentId;
     String type;
+    List<String> dependentDepartments;
     Boolean deleted = false;
 }

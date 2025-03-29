@@ -17,7 +17,7 @@ public class CreateDepartmentReq {
     @NotBlank(message = "Email không được để trống.")
     String email;
     String fax;
-    String parentDepartment;
+    String parentDepartmentId;
     @NotBlank(message = "Loại đơn vị không được để trống.")
     String type;
 }
