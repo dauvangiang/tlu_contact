@@ -17,6 +17,7 @@ public class Student {
     String email;
     String address;
     String className;
-    String unit;
+    String departmentId;
     String userID;
+    Boolean deleted = false;
 }
