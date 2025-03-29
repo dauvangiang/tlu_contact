@@ -192,7 +192,7 @@ class DepartmentListFragment : Fragment() {
         val departmentService = DepartmentServiceImpl()
         val token = "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjMwYjIyMWFiNjU2MTdiY2Y4N2VlMGY4NDYyZjc0ZTM2NTIyY2EyZTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGx1LWNvbnRhY3QtYzBjNjkiLCJhdWQiOiJ0bHUtY29udGFjdC1jMGM2OSIsImF1dGhfdGltZSI6MTc0MzA2ODg5NCwidXNlcl9pZCI6IjFoMXdZZ0R1c3hWdWZ4MVFXOUNlVmFCamlnejEiLCJzdWIiOiIxaDF3WWdEdXN4VnVmeDFRVzlDZVZhQmppZ3oxIiwiaWF0IjoxNzQzMDY4ODk0LCJleHAiOjE3NDMwNzI0OTQsImVtYWlsIjoiMjI1MTA2MTc2M0BlLnRsdS5lZHUudm4iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiMjI1MTA2MTc2M0BlLnRsdS5lZHUudm4iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.T3VMRaMF3jWrtgv-F2vv15McnXjf_JU_-zkE4VxqbK3wqCQoZ-8h3WcZTpL7mdK88rqE5GL1iiCSQfEe-0Q9-PPvmSIYqUF_GKVhHFvqT9eVY_BSESWTdJh8p2cqSP1mgg_mnB_bQNcyiS86YbP1RpwVXA-T8DNOqI3BuCjHkQcuw10dZaCi9tgMdM8cVXNGkIanWksCip-7oVXHKDQHrH38cKRoFV_fYhNj_t0rdP0zKCcvS1dMY1GZXmlyLdZ-bRx5Xl2c5bimwYSykTGCEGrdVVYblicPTphwm34WKhyw0IcQv1E8b2N0D8y0O0OjL1UtWDYBf24vKqWss4RTgg"
 
-        Toast.makeText(requireContext(), token, Toast.LENGTH_SHORT).show()
+//        Toast.makeText(requireContext(), token, Toast.LENGTH_SHORT).show()
         return departmentService.getDepartments(token, 0, 10) ?: mutableListOf()
 
 //        return mutableListOf(
