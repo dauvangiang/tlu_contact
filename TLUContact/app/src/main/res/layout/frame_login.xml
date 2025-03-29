@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="16dp"
-            android:paintFlags="0x08"
+
             android:text="Đăng nhập"
             android:textColor="@color/primary_blue"
             android:textSize="16sp"
@@ -97,12 +97,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_lock"
-            android:drawableEnd="@drawable/ic_visibility"
+
             android:hint="Mật khẩu"
             android:inputType="textPassword"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
-
+    <!-- Nút hiển thị/ẩn mật khẩu -->
+    <ImageView
+        android:id="@+id/toggle_password_visibility"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_visibility"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/password_layout"
+        app:layout_constraintBottom_toBottomOf="@id/password_layout"/>
     <!-- Ghi nhớ mật khẩu & Quên mật khẩu -->
     <LinearLayout
         android:id="@+id/password_options"
