@@ -21,7 +21,7 @@
 
     <!-- Tên người dùng -->
     <TextView
-        android:id="@+id/tv_contact_name_detail"
+        android:id="@+id/tv_contact_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/contact_name_mockup"
@@ -35,13 +35,13 @@
 
     <!-- Địa điểm -->
     <TextView
-        android:id="@+id/tv_second_contact_info_detail"
+        android:id="@+id/tv_second_contact_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/second_contact_info_mockup"
         android:textSize="14sp"
         android:textColor="@color/second_black"
-        app:layout_constraintTop_toBottomOf="@id/tv_contact_name_detail"
+        app:layout_constraintTop_toBottomOf="@id/tv_contact_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
