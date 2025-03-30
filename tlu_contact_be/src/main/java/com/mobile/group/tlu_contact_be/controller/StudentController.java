@@ -4,7 +4,6 @@ import com.mobile.group.tlu_contact_be.dto.request.IdsReq;
 import com.mobile.group.tlu_contact_be.dto.response.BaseResponse;
 import com.mobile.group.tlu_contact_be.model.Student;
 import com.mobile.group.tlu_contact_be.service.StudentService;
-import com.mobile.group.tlu_contact_be.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
