@@ -26,8 +26,8 @@ public class DepartmentController {
     }
 
     @GetMapping("v1/departments/{departmentId}")
-    public ResponseEntity<DepartmentRes> getDepartment(@PathVariable String departmentId) {
-        return ResponseEntity.ok(departmentService.getDepartment(departmentId));
+    public ResponseEntity<BaseResponse<DepartmentRes>> getDepartment(@PathVariable String departmentId) {
+        return ResponseEntity.ok(new BaseResponse<>(departmentService.getDepartment(departmentId)));
     }
 
     @GetMapping("v1/departments")

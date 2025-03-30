@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -20,11 +21,11 @@ public class DepartmentRes {
     String phone;
     String email;
     String fax;
-    Department parentDepartment;
     String type;
-    List<Department> dependentDepartments;
+    Map<String, String> parentDepartment;
+    List<Map<String, String>> dependentDepartments;
 
-    public DepartmentRes(Department department, Department parentDepartment, List<Department> dependentDepartments) {
+    public DepartmentRes(Department department, Map<String, String> parentDepartment, List<Map<String, String>> dependentDepartments) {
         this.code = department.getCode();
         this.name = department.getName();
         this.address = department.getAddress();
@@ -32,8 +33,8 @@ public class DepartmentRes {
         this.phone = department.getPhone();
         this.email = department.getEmail();
         this.fax = department.getFax();
-        this.parentDepartment = parentDepartment;
         this.type = department.getType();
+        this.parentDepartment = parentDepartment;
         this.dependentDepartments = dependentDepartments;
     }
 }
