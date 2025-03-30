@@ -21,6 +21,6 @@ public class Department {
     String fax;
     String parentDepartmentId;
     String type;
-    List<String> dependentDepartments;
+    List<String> dependentDepartmentIds;
     Boolean deleted = false;
 }

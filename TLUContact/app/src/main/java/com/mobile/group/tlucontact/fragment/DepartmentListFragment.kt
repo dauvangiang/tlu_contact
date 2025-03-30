@@ -26,7 +26,10 @@ import com.mobile.group.tlucontact.models.Department
 import com.mobile.group.tlucontact.databinding.FragmentDepartmentListBinding
 import com.mobile.group.tlucontact.services.department.DepartmentService
 import com.mobile.group.tlucontact.services.department.DepartmentServiceImpl
+import com.mobile.group.tlucontact.utils.DepartmentHelper
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DepartmentListFragment : Fragment() {
 
@@ -46,17 +49,13 @@ class DepartmentListFragment : Fragment() {
     private lateinit var imageViewAdd: ImageView
 
     private var isAscending = true
-    private var mockDepartments: MutableList<Department> = mutableListOf()
+    private var departments: MutableList<Department> = mutableListOf()
     private lateinit var currDatas: MutableList<Department>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        lifecycleScope.launch {
-            mockDepartments = createMockData()
-            Toast.makeText(requireContext(), mockDepartments.size.toString(), Toast.LENGTH_SHORT).show()
-        }
         _binding = FragmentDepartmentListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -69,7 +68,6 @@ class DepartmentListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize views
         recyclerView = view.findViewById(R.id.recyclerViewContacts)
         editTextSearch = view.findViewById(R.id.editTextSearch)
         spinnerFilter = view.findViewById(R.id.spinnerFilter)
@@ -82,6 +80,9 @@ class DepartmentListFragment : Fragment() {
         imageViewAdd = view.findViewById(R.id.imageViewAdd)
 
         setupRecyclerView(requireContext())
+
+        DepartmentHelper.fetchDepartments(viewLifecycleOwner, departments, adapter)
+
         setupSearch()
         setupFilter()
         setupSort()
@@ -89,10 +90,10 @@ class DepartmentListFragment : Fragment() {
     }
 
     private fun setupRecyclerView(context: Context) {
-        adapter = DepartmentAdapter(context, mockDepartments)
+        adapter = DepartmentAdapter(context, departments)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-        currDatas = mockDepartments
+        currDatas = departments
     }
 
     private fun setupSearch() {
@@ -136,20 +137,18 @@ class DepartmentListFragment : Fragment() {
     }
 
     private fun filter(text: String) {
-        val departments = mutableListOf<Department>()
+        val filteredDepartments = mutableListOf<Department>()
 
-        mockDepartments.forEach { department ->
+        departments.forEach { department ->
             if (department.name.contains(text, ignoreCase = true) ||
                 department.phone.contains(text, ignoreCase = true) ||
             department.phone.contains(text) ||
                     department.email.contains(text, ignoreCase = true)
-            ) {
-            departments.add(department)
-        }
+            ) { filteredDepartments.add(department) }
         }
 
-        currDatas = departments
-        adapter.filter(departments)
+        currDatas = filteredDepartments
+        adapter.filter(filteredDepartments)
     }
 
     private fun setupFilter() {
@@ -170,10 +169,10 @@ class DepartmentListFragment : Fragment() {
 
     private fun filterDepartments(filter: String) {
         if (filter == "Tất cả") {
-            adapter.filter(mockDepartments)
-            currDatas = mockDepartments
+            adapter.filter(departments)
+            currDatas = departments
         } else {
-            val filtered = mockDepartments.filter { it.type == filter }.toMutableList()
+            val filtered = departments.filter { it.type == filter }.toMutableList()
             currDatas = filtered
             adapter.filter(filtered)
         }
@@ -186,27 +185,6 @@ class DepartmentListFragment : Fragment() {
             // Hide the menu after selecting an option
             cardViewMenu.visibility = View.GONE
         }
-    }
-
-    private suspend fun createMockData(): MutableList<Department> {
-        val departmentService = DepartmentServiceImpl()
-        val token = "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjMwYjIyMWFiNjU2MTdiY2Y4N2VlMGY4NDYyZjc0ZTM2NTIyY2EyZTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGx1LWNvbnRhY3QtYzBjNjkiLCJhdWQiOiJ0bHUtY29udGFjdC1jMGM2OSIsImF1dGhfdGltZSI6MTc0MzA2ODg5NCwidXNlcl9pZCI6IjFoMXdZZ0R1c3hWdWZ4MVFXOUNlVmFCamlnejEiLCJzdWIiOiIxaDF3WWdEdXN4VnVmeDFRVzlDZVZhQmppZ3oxIiwiaWF0IjoxNzQzMDY4ODk0LCJleHAiOjE3NDMwNzI0OTQsImVtYWlsIjoiMjI1MTA2MTc2M0BlLnRsdS5lZHUudm4iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiMjI1MTA2MTc2M0BlLnRsdS5lZHUudm4iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.T3VMRaMF3jWrtgv-F2vv15McnXjf_JU_-zkE4VxqbK3wqCQoZ-8h3WcZTpL7mdK88rqE5GL1iiCSQfEe-0Q9-PPvmSIYqUF_GKVhHFvqT9eVY_BSESWTdJh8p2cqSP1mgg_mnB_bQNcyiS86YbP1RpwVXA-T8DNOqI3BuCjHkQcuw10dZaCi9tgMdM8cVXNGkIanWksCip-7oVXHKDQHrH38cKRoFV_fYhNj_t0rdP0zKCcvS1dMY1GZXmlyLdZ-bRx5Xl2c5bimwYSykTGCEGrdVVYblicPTphwm34WKhyw0IcQv1E8b2N0D8y0O0OjL1UtWDYBf24vKqWss4RTgg"
-
-        Toast.makeText(requireContext(), token, Toast.LENGTH_SHORT).show()
-        return departmentService.getDepartments(token, 0, 10) ?: mutableListOf()
-
-//        return mutableListOf(
-//            Department("1", "CNTT", "Khoa Công nghệ thông tin", "Nhà C1", "", "0243.8522201", "cntt@tlu.edu.vn", "0243.8522201", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
-//            Department("2", "KTXD", "Khoa Kỹ thuật xây dựng", "Nhà C2", "", "0243.8522202", "ktxd@tlu.edu.vn", "0243.8522202", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
-//            Department("3", "KTTC", "Khoa Kinh tế và Quản lý", "Nhà B1", "", "0243.8522203", "kttc@tlu.edu.vn", "0243.8522203", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
-//            Department("4", "KTHH", "Khoa Kỹ thuật tài nguyên nước", "Nhà A5", "", "0243.8522204", "kthh@tlu.edu.vn", "0243.8522204", "Trường Đại học Thủy lợi", "Khoa", R.drawable.cho),
-//            Department("5", "DAOTAO", "Phòng Đào tạo", "Nhà A1", "", "0243.8522205", "daotao@tlu.edu.vn", "0243.8522205", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
-//            Department("6", "CTSV", "Phòng Công tác sinh viên", "Nhà A1", "", "0243.8522206", "ctsv@tlu.edu.vn", "0243.8522206", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
-//            Department("7", "TCHC", "Phòng Tổ chức hành chính", "Nhà A1", "", "0243.8522207", "tchc@tlu.edu.vn", "0243.8522207", "Trường Đại học Thủy lợi", "Phòng ban", R.drawable.cho),
-//            Department("8", "TTCNTT", "Trung tâm Công nghệ thông tin", "Nhà C1", "", "0243.8522208", "ttcntt@tlu.edu.vn", "0243.8522208", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho),
-//            Department("9", "TTNN", "Trung tâm Ngoại ngữ", "Nhà A2", "", "0243.8522209", "ttnn@tlu.edu.vn", "0243.8522209", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho),
-//            Department("10", "TTDVTH", "Trung tâm Dịch vụ tổng hợp", "Nhà A3", "", "0243.8522210", "ttdvth@tlu.edu.vn", "0243.8522210", "Trường Đại học Thủy lợi", "Trung tâm", R.drawable.cho)
-//        )
     }
 }
 

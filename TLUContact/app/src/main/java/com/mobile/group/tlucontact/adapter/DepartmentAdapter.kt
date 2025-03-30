@@ -1,6 +1,5 @@
 package com.mobile.group.tlucontact.adapter
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -10,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mobile.group.tlucontact.R
 import com.mobile.group.tlucontact.activities.DepartmentDetailActivity
 import com.mobile.group.tlucontact.models.Department
@@ -85,7 +85,7 @@ class DepartmentAdapter(private val context: Context, var departments: MutableLi
             (holder as DepartmentViewHolder).bind(department)
             holder.itemView.setOnClickListener {
                 val intent = Intent(context, DepartmentDetailActivity::class.java).apply {
-                    putExtra("departmentSelected", department.id)
+                    putExtra("departmentSelected", department)
                 }
                 context.startActivity(intent)
             }
@@ -110,7 +110,13 @@ class DepartmentAdapter(private val context: Context, var departments: MutableLi
         fun bind(department: Department) {
             textViewName.text = department.name
             textViewPhone.text = department.phone
-            imageViewLogo.setImageResource(department.avatarResId)
+            Glide.with(itemView.context)
+                .load(department.logoUrl)
+                .placeholder(R.drawable.tlu)
+                .error(R.drawable.tlu)
+                .into(imageViewLogo)
+
+//            imageViewLogo.setImageResource(department.avatarResId)
         }
     }
 }

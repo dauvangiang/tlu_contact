@@ -36,7 +36,7 @@ public class DepartmentService {
                     .fax(request.getFax())
                     .parentDepartmentId(request.getParentDepartmentId())
                     .type(request.getType())
-                    .dependentDepartments(Collections.emptyList())
+                    .dependentDepartmentIds(Collections.emptyList())
                     .deleted(false)
                     .build();
             ApiFuture<WriteResult> future = departmentRepo.getCollection().document(department.getCode()).set(department);
@@ -70,18 +70,23 @@ public class DepartmentService {
     }
 
     private DepartmentRes getDepartmentRes(Department department) throws ExecutionException, InterruptedException {
-        Department parentDepartment = null;
+        Map<String, String> parentDepartment = new HashMap<>();
         if (department.getParentDepartmentId() != null) {
             QueryDocumentSnapshot snapshot = departmentRepo.getDepartment(department.getParentDepartmentId());
-            parentDepartment = snapshot == null ? null : snapshot.toObject(Department.class);
+            String name = snapshot == null ? null : snapshot.toObject(Department.class).getName();
+            parentDepartment.put("code", department.getParentDepartmentId());
+            parentDepartment.put("name", name);
         }
 
-        List<Department> dependentDepartments = new ArrayList<>();
-        if (department.getDependentDepartments() != null && !department.getDependentDepartments().isEmpty()) {
-            for (String id : department.getDependentDepartments()) {
+        List<Map<String, String>> dependentDepartments = new ArrayList<>();
+        if (department.getDependentDepartmentIds() != null && !department.getDependentDepartmentIds().isEmpty()) {
+            for (String id : department.getDependentDepartmentIds()) {
                 QueryDocumentSnapshot snapshot = departmentRepo.getDepartment(id);
-                Department d = snapshot == null ? null : snapshot.toObject(Department.class);
-                dependentDepartments.add(d);
+                String name = snapshot == null ? null : snapshot.toObject(Department.class).getName();
+
+                Map<String, String> dep = new HashMap<>();
+                dep.put("code", id); dep.put("name", name);
+                dependentDepartments.add(dep);
             }
         }
 
