@@ -109,7 +109,7 @@ class StaffAdapter(private val context: Context, var staffList: MutableList<Staf
 
         fun bind(staff: Staff) {
             textViewName.text = staff.fullName
-//            textViewPosition.text = staff.displayPosition
+            textViewPosition.text = staff.position
             imageViewAvatar.setImageResource(staff.avatarResId)
         }
     }
