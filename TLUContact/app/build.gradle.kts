@@ -53,7 +53,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation (libs.androidx.constraintlayout)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.config.ktx)
@@ -62,4 +62,6 @@ dependencies {
     implementation(libs.retrofit.v2110)
     implementation(libs.converter.jackson)
     implementation(libs.logging.interceptor)
+
+    implementation(libs.glide) //Tải ảnh từ URL đưa vào imageView
 }

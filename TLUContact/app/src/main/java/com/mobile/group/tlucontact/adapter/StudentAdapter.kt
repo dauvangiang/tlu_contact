@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mobile.group.tlucontact.R
 import com.mobile.group.tlucontact.activities.StudentDetailActivity
 import java.text.Collator
@@ -108,8 +109,12 @@ class StudentAdapter(private val context: Context, var students: MutableList<Stu
 
         fun bind(student: Student) {
             textViewName.text = student.fullName
-            textViewStudentInfo.text = student.displayInfo
-            imageViewAvatar.setImageResource(student.avatarResId)
+            textViewStudentInfo.text = student.code + " - " + student.department.name
+            Glide.with(itemView.context)
+                .load(student.photoUrl)
+                .placeholder(R.drawable.user_avatar)
+                .error(R.drawable.user_avatar)
+                .into(imageViewAvatar)
         }
     }
 }

@@ -6,13 +6,13 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateDepartmentRep {
+public class UpdateDepartmentReq {
     String name;
     String address;
     String logoUrl;
     String phone;
     String email;
     String fax;
-    String parentDepartment;
+    String parentDepartmentId;
     String type;
 }

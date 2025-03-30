@@ -1,6 +1,7 @@
 package com.mobile.group.tlucontact.activities
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,5 +18,9 @@ class ProfileActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, ProfileFragment()) // Load Fragment vào container
             .commit()
+    }
+
+    fun goBack(view: View) {
+        finish()
     }
 }
