@@ -2,7 +2,6 @@ package com.mobile.group.tlu_contact_be.configs;
 
 import com.google.firebase.database.annotations.NotNull;
 import com.mobile.group.tlu_contact_be.security.interceptor.UserInterceptor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableAsync
 @RequiredArgsConstructor
-@NoArgsConstructor(force = true)
 public class WebMvcConfig implements WebMvcConfigurer {
     private final UserInterceptor userInterceptor;
 
