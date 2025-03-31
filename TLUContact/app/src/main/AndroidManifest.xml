@@ -21,7 +21,7 @@
             android:name=".activities.StudentDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".activities."
+            android:name=".activities.AuthActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/Theme.TLUContact">
