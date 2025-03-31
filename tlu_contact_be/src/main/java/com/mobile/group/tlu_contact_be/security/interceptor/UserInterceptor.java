@@ -2,26 +2,28 @@ package com.mobile.group.tlu_contact_be.security.interceptor;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.database.annotations.NotNull;
+import com.mobile.group.tlu_contact_be.exceptions.CustomException;
 import com.mobile.group.tlu_contact_be.model.User;
 import com.mobile.group.tlu_contact_be.security.JwtTokenProvider;
 import com.mobile.group.tlu_contact_be.security.SecurityContexts;
 import com.mobile.group.tlu_contact_be.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
+@RequiredArgsConstructor
 public class UserInterceptor implements HandlerInterceptor {
-
-    @Autowired
-    private UserService userService;
+    
+    private final UserService userService;
 
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
-        RuntimeException exception = new RuntimeException("login_required");
+        CustomException exception = new CustomException("login_required", HttpStatus.UNAUTHORIZED);
         String vendorCode = request.getHeader("Authorization");
         if (Strings.isEmpty(vendorCode)) {
             throw exception;

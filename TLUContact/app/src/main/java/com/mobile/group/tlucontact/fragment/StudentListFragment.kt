@@ -21,6 +21,7 @@ import com.mobile.group.tlucontact.R
 import com.mobile.group.tlucontact.adapter.StudentAdapter
 import com.mobile.group.tlucontact.models.Student
 import com.mobile.group.tlucontact.databinding.FragmentStudentListBinding
+import com.mobile.group.tlucontact.utils.StudentHelper
 
 class StudentListFragment : Fragment() {
 
@@ -40,7 +41,7 @@ class StudentListFragment : Fragment() {
     private lateinit var imageViewAdd: ImageView
 
     private var isAscending = true
-    private val mockStudents = createMockData()
+    private val students: MutableList<Student> = mutableListOf()
     private lateinit var currDatas: MutableList<Student>
 
     override fun onCreateView(
@@ -72,6 +73,9 @@ class StudentListFragment : Fragment() {
         imageViewAdd = view.findViewById(R.id.imageViewAdd)
 
         setupRecyclerView(requireContext())
+
+        StudentHelper.fetchStudents(viewLifecycleOwner, students, adapter)
+
         setupSearch()
         setupFilter()
         setupSort()
@@ -79,10 +83,10 @@ class StudentListFragment : Fragment() {
     }
 
     private fun setupRecyclerView(context: Context) {
-        adapter = StudentAdapter(context, mockStudents)
+        adapter = StudentAdapter(context, students)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-        currDatas = mockStudents
+        currDatas = students
     }
 
     private fun setupSearch() {
@@ -126,22 +130,21 @@ class StudentListFragment : Fragment() {
     }
 
     private fun filter(text: String) {
-        val students = mutableListOf<Student>()
+        val filteredStudents = mutableListOf<Student>()
 
-        mockStudents.forEach { student ->
+        students.forEach { student ->
             if (student.fullName.contains(text, ignoreCase = true) ||
-                student.studentId.contains(text) ||
+                student.code.contains(text) ||
                 student.phone.contains(text) ||
                 student.email.contains(text, ignoreCase = true) ||
-                student.className.contains(text, ignoreCase = true) ||
-                student.unit.contains(text, ignoreCase = true)
+                student.department.name.contains(text, ignoreCase = true)
             ) {
-                students.add(student)
+                filteredStudents.add(student)
             }
         }
 
-        currDatas = students
-        adapter.filter(students)
+        currDatas = filteredStudents
+        adapter.filter(filteredStudents)
     }
 
     private fun setupFilter() {
@@ -162,10 +165,10 @@ class StudentListFragment : Fragment() {
 
     private fun filterStudents(filter: String) {
         if (filter == "Tất cả") {
-            adapter.filter(mockStudents)
-            currDatas = mockStudents
+            adapter.filter(students)
+            currDatas = students
         } else {
-            val filtered = mockStudents.filter { it.unit == filter }.toMutableList()
+            val filtered = students.filter { it.department.name == filter }.toMutableList()
             currDatas = filtered
             adapter.filter(filtered)
         }
@@ -178,27 +181,6 @@ class StudentListFragment : Fragment() {
             // Hide the menu after selecting an option
             cardViewMenu.visibility = View.GONE
         }
-    }
-
-    private fun createMockData(): MutableList<Student> {
-        return mutableListOf(
-            Student("2251061001", "Nguyễn Văn An", "", "0123456789", "nva@gmail.com", "Hà Nội", "64CNTT1", "Khoa CNTT", "user1", R.drawable.cho),
-            Student("2251061002", "Trần Thị Bình", "", "0123456789", "ttb@gmail.com", "Hà Nội", "64CNTT1", "Khoa CNTT", "user2", R.drawable.cho),
-            Student("2251061003", "Lê Văn Cường", "", "0123456789", "lvc@gmail.com", "Hà Nội", "64CNTT1", "Khoa CNTT", "user3", R.drawable.cho),
-            Student("2251061004", "Phạm Thị Dung", "", "0123456789", "ptd@gmail.com", "Hà Nội", "64CNTT2", "Khoa CNTT", "user4", R.drawable.cho),
-            Student("2251061005", "Hoàng Văn Em", "", "0123456789", "hve@gmail.com", "Hà Nội", "64CNTT2", "Khoa CNTT", "user5", R.drawable.cho),
-            Student("2251061006", "Ngô Thị Phương", "", "0123456789", "ntp@gmail.com", "Hà Nội", "64CNTT2", "Khoa CNTT", "user6", R.drawable.cho),
-            Student("2251062001", "Đỗ Văn Giang", "", "0123456789", "dvg@gmail.com", "Hà Nội", "64KTXD1", "Khoa KTXD", "user7", R.drawable.cho),
-            Student("2251062002", "Bùi Thị Hoa", "", "0123456789", "bth@gmail.com", "Hà Nội", "64KTXD1", "Khoa KTXD", "user8", R.drawable.cho),
-            Student("2251062003", "Nguyễn Văn Thắm", "", "0123456789", "nvt@gmail.com", "Hà Nội", "64KTXD1", "Khoa KTXD", "user9", R.drawable.cho),
-            Student("2251062004", "Trần Văn Khánh", "", "0123456789", "tvk@gmail.com", "Hà Nội", "64KTXD2", "Khoa KTXD", "user10", R.drawable.cho),
-            Student("2251062005", "Lê Thị Lan", "", "0123456789", "ltl@gmail.com", "Hà Nội", "64KTXD2", "Khoa KTXD", "user11", R.drawable.cho),
-            Student("2251063001", "Phạm Văn Minh", "", "0123456789", "pvm@gmail.com", "Hà Nội", "64KTTC1", "Khoa KTTC", "user12", R.drawable.cho),
-            Student("2251063002", "Hoàng Thị Ngọc", "", "0123456789", "htn@gmail.com", "Hà Nội", "64KTTC1", "Khoa KTTC", "user13", R.drawable.cho),
-            Student("2251063003", "Ngô Văn Oanh", "", "0123456789", "nvo@gmail.com", "Hà Nội", "64KTTC1", "Khoa KTTC", "user14", R.drawable.cho),
-            Student("2251063004", "Đỗ Thị Phương", "", "0123456789", "dtp@gmail.com", "Hà Nội", "64KTTC2", "Khoa KTTC", "user15", R.drawable.cho),
-            Student("2251063005", "Bùi Văn Quang", "", "0123456789", "bvq@gmail.com", "Hà Nội", "64KTTC2", "Khoa KTTC", "user16", R.drawable.cho)
-        )
     }
 }
 

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -47,12 +48,20 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     implementation(libs.androidx.slidingpanelayout)
-    implementation(libs.firebase.auth)
     implementation("com.google.firebase:firebase-database-ktx:20.3.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
+    
+    implementation (libs.androidx.constraintlayout)
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.config.ktx)
+
+    implementation(libs.okhttp)
+    implementation(libs.retrofit.v2110)
+    implementation(libs.converter.jackson)
+    implementation(libs.logging.interceptor)
+
+    implementation(libs.glide) //Tải ảnh từ URL đưa vào imageView
 }

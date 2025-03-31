@@ -1,8 +1,8 @@
 package com.mobile.group.tlu_contact_be.controller;
 
+import com.mobile.group.tlu_contact_be.dto.request.IdsReq;
 import com.mobile.group.tlu_contact_be.dto.response.BaseResponse;
 import com.mobile.group.tlu_contact_be.model.Student;
-import com.mobile.group.tlu_contact_be.service.StudentService;
 import com.mobile.group.tlu_contact_be.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,9 +16,15 @@ public class StudentController {
 
     private final StudentService studentService;
 
-    @GetMapping("v1/student")
-    public ResponseEntity<Object> getAllStudents() {
-        return ResponseEntity.ok(new BaseResponse<>(studentService.getAllStudents()));
+    @GetMapping("v1/students")
+    public ResponseEntity<Object> getAllStudents(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) Boolean sort,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Boolean deleted
+    ) {
+        return ResponseEntity.ok(new BaseResponse<>(studentService.getAllStudents(page, size, sort, search, deleted)));
     }
 
     @GetMapping("v1/student/{studentId}")
@@ -36,9 +42,9 @@ public class StudentController {
         return ResponseEntity.ok(new BaseResponse<>(studentService.updateStudent(studentId, request)));
     }
 
-    @GetMapping("v1/student/delete/{studentId}")
-    public ResponseEntity<Object> deleteStudent(@PathVariable String studentId) {
-        studentService.deleteStudent(studentId);
+    @GetMapping("v1/student/delete")
+    public ResponseEntity<Object> deleteStudent(@RequestBody IdsReq ids) {
+        studentService.deleteStudent(ids);
         return ResponseEntity.ok(new BaseResponse<>("Đã xóa thành công"));
     }
 }
