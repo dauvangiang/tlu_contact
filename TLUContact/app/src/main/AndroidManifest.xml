@@ -15,9 +15,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activities.LoginActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.DepartmentDetailActivity"
             android:exported="false" />
         <activity
@@ -34,12 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.RegisterActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.RegisterFinalActivity"
-            android:exported="false" />
         <activity
             android:name=".activities.ResetPasswordActivity"
             android:exported="false" />
