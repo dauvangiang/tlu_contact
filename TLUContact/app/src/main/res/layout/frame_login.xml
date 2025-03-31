@@ -101,7 +101,19 @@
             android:inputType="textPassword"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
-
+    <!-- Nút hiển thị/ẩn mật khẩu -->
+    <ImageView
+        android:id="@+id/toggle_password_visibility"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_visibility"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/password_layout"
+        app:layout_constraintBottom_toBottomOf="@id/password_layout"/>
     <!-- Ghi nhớ mật khẩu & Quên mật khẩu -->
     <LinearLayout
         android:id="@+id/password_options"

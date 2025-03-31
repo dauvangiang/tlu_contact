@@ -41,18 +41,18 @@ android {
 }
 
 dependencies {
-
+    implementation ("com.sun.mail:android-mail:1.6.2")
+    implementation ("com.sun.mail:android-activation:1.6.2")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     implementation(libs.androidx.slidingpanelayout)
-    implementation(libs.androidx.cardview)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.activity)
+    implementation("com.google.firebase:firebase-database-ktx:20.3.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    
     implementation (libs.androidx.constraintlayout)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
