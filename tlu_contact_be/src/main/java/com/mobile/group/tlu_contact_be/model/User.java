@@ -18,8 +18,8 @@ public class User {
     String email;
     String phoneNumber;
     Role role;
-    String photoURL;
-    String unit;
+    String photoBase64;
+    String department;
     @JsonIgnore
     String password;
 }

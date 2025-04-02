@@ -65,13 +65,10 @@ public class UserService {
 
     @Async
     void saveUserToFirestore(String uid, CreateUserReq request) {
-        Role role = null;
-        if(request.getEmail().endsWith("@tlu.edu.vn")){
+        Role role = Role.STUDENT;
+
+        if (request.getEmail().contains("@tlu.edu.vn")) {
             role = Role.STAFF;
-        } else if (request.getEmail().endsWith("@e.tlu.edu.vn")){
-            role = Role.STUDENT;
-        } else {
-            throw new CustomException("Địa chỉ email không hợp lệ.");
         }
 
         User user = User.builder()
@@ -79,7 +76,7 @@ public class UserService {
                 .email(request.getEmail())
                 .displayName(request.getDisplayName())
                 .phoneNumber(request.getPhoneNumber())
-                .photoURL(request.getPhotoUrl())
+                .photoBase64(request.getPhotoBase64())
                 .role(role)
                 .build();
 

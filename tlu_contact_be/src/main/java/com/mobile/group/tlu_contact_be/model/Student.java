@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 public class Student {
     String studentId;
     String fullName;
-    String photoURL;
+    String photoBase64;
     String phone;
     String email;
     String address;

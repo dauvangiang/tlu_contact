@@ -83,8 +83,8 @@ public class StudentService {
             if(request.getFullName() != null && !request.getFullName().isBlank()) {
                 student.setFullName(request.getFullName());
             }
-            if(request.getPhotoURL() != null && !request.getPhotoURL().isBlank()) {
-                student.setPhotoURL(request.getPhotoURL());
+            if(request.getPhotoBase64() != null && !request.getPhotoBase64().isBlank()) {
+                student.setPhotoBase64(request.getPhotoBase64());
             }
             if(request.getPhone() != null && !request.getPhone().isBlank()) {
                 student.setPhone(request.getPhone());

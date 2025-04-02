@@ -14,7 +14,7 @@ public class CreateUserReq {
     @NotBlank
     String email;
     String displayName;
-    String photoUrl;
+    String photoBase64;
     String phoneNumber;
     @NotBlank
     String password;

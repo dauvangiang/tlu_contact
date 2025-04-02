@@ -15,10 +15,9 @@ public class Department {
     String code;
     String name;
     String address;
-    String logoURL;
+    String logoBase64;
     String phone;
     String email;
-    String fax;
     String parentDepartmentId;
     String type;
     List<String> dependentDepartmentIds;

@@ -9,10 +9,9 @@ import lombok.experimental.FieldDefaults;
 public class UpdateDepartmentReq {
     String name;
     String address;
-    String logoUrl;
+    String logoBase64;
     String phone;
     String email;
-    String fax;
     String parentDepartmentId;
     String type;
 }
