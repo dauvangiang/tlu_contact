@@ -16,9 +16,14 @@ import java.util.stream.Collectors;
 
 @Repository
 public class StaffRepository {
-    
-    private final Firestore db = FirestoreClient.getFirestore();
-    private final CollectionReference collection = db.collection("staffs");
+
+    private final CollectionReference collection;
+    private final CollectionReference departmentCollection;
+
+    public StaffRepository(Firestore firestore) {
+        collection = firestore.collection("staffs");
+        departmentCollection = firestore.collection("departments");
+    }
     
     public List<Staff> findAll(Integer page, Integer size, Boolean sort, String search, Boolean deleted) throws ExecutionException, InterruptedException {
         Query query = collection;
@@ -113,7 +118,7 @@ public class StaffRepository {
     }
     
     public Department findDepartmentById(String id) throws ExecutionException, InterruptedException {
-        DocumentSnapshot document = db.collection("departments").document(id).get().get();
+        DocumentSnapshot document = departmentCollection.document(id).get().get();
         if (document.exists()) {
             return document.toObject(Department.class);
         }

@@ -28,19 +28,16 @@ import java.util.concurrent.ExecutionException;
 import com.mobile.group.tlu_contact_be.dto.constant.Role;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final Firestore db;
     private final FirebaseAuth firebaseAuth;
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
     @Value("${firebase.api.key}")
     private String FIREBASE_API_KEY;
-
-    public UserService(FirebaseApp firebaseApp) {
-        this.db = FirestoreClient.getFirestore(firebaseApp);
-        this.firebaseAuth = FirebaseAuth.getInstance();
-    }
+    private final StudentService studentService;
+    private final StaffService staffService;
 
     public UserRecord register(CreateUserReq request) {
         if (checkEmailExists(request.getEmail())) {
@@ -160,5 +157,17 @@ public class UserService {
         } catch (InterruptedException | ExecutionException e) {
             throw new CustomException("Failed to delete user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public Object getUserProfile(String code, String role) {
+        switch (Role.fromValue(role)) {
+            case STUDENT -> {
+                return studentService.getStudent(code);
+            }
+            case STAFF -> {
+                return staffService.getStaff(code);
+            }
+        }
+        throw new CustomException("Failed to load profile", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

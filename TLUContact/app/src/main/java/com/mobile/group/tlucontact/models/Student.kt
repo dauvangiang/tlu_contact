@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 data class Student @JsonCreator constructor(
     @JsonProperty("studentId") val code: String,
     @JsonProperty("fullName") val fullName: String,
-    @JsonProperty("photoUrl") val photoUrl: String? = null,
+    @JsonProperty("photoURL") val photoUrl: String? = null,
     @JsonProperty("phone") val phone: String,
     @JsonProperty("email") val email: String,
     @JsonProperty("address") val address: String? = null,

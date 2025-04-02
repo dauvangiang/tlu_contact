@@ -1,9 +1,12 @@
 package com.mobile.group.tlu_contact_be.controller;
 
+import com.mobile.group.tlu_contact_be.dto.constant.Role;
+import com.mobile.group.tlu_contact_be.dto.response.BaseResponse;
 import com.mobile.group.tlu_contact_be.model.User;
 import com.mobile.group.tlu_contact_be.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,5 +43,10 @@ public class UserController {
     @DeleteMapping("v1/users/delete/{id}")
     public void deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
+    }
+
+    @PostMapping("v1/users/my-profile")
+    public ResponseEntity<BaseResponse<Object>> getProfile(@RequestParam String code, @RequestParam String role) {
+        return ResponseEntity.ok(new BaseResponse<>(userService.getUserProfile(code, role)));
     }
 }
