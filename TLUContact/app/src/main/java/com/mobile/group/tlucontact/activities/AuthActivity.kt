@@ -7,9 +7,11 @@ import android.view.View
 import android.view.WindowInsetsController
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import com.mobile.group.tlucontact.R
 import com.mobile.group.tlucontact.fragment.LoginFragment
 import com.mobile.group.tlucontact.fragment.RegisterFragment
@@ -18,6 +20,13 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var tvLogin: TextView
     private lateinit var tvRegister: TextView
 
+    // ViewModel tích hợp ngay trong AuthActivity
+    class AuthViewModel : ViewModel() {
+        var isRegistering: Boolean = false
+    }
+
+    private val viewModel: AuthViewModel by viewModels() // Sử dụng ViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
@@ -25,7 +34,26 @@ class AuthActivity : AppCompatActivity() {
         getReferenceToViews()
         setListener()
 
-        loadFragment(LoginFragment())
+        // Xác định fragment hiện tại dựa trên ViewModel
+        if (savedInstanceState == null) {
+            if (viewModel.isRegistering) {
+                loadFragment(RegisterFragment())
+                setRegisterSelected()
+            } else {
+                loadFragment(LoginFragment())
+                setLoginSelected()
+            }
+        }else {
+
+            if (viewModel.isRegistering) {
+                setRegisterSelected()
+            } else {
+                setLoginSelected()
+            }
+        }
+
+
+
 
         onBackPressedDispatcher.addCallback(this, backPressedCallback)
         updateUIVisibility(resources.configuration.orientation)
@@ -54,11 +82,13 @@ class AuthActivity : AppCompatActivity() {
         if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStack()
         }
+        viewModel.isRegistering = false
         setLoginSelected()
     }
 
     private fun openRegisterFragment() {
         loadFragment(RegisterFragment(), addToBackStack = true)
+        viewModel.isRegistering = true
         setRegisterSelected()
     }
 
@@ -81,6 +111,7 @@ class AuthActivity : AppCompatActivity() {
         override fun handleOnBackPressed() {
             if (supportFragmentManager.backStackEntryCount > 0) {
                 supportFragmentManager.popBackStack()
+                viewModel.isRegistering = false
                 setLoginSelected()
             } else {
                 finish()
