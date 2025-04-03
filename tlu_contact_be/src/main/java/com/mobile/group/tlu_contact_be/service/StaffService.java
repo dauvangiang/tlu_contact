@@ -3,6 +3,7 @@ package com.mobile.group.tlu_contact_be.service;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.mobile.group.tlu_contact_be.dto.request.IdsReq;
 import com.mobile.group.tlu_contact_be.dto.response.PageResponse;
 import com.mobile.group.tlu_contact_be.dto.response.staff.StaffRes;
 import com.mobile.group.tlu_contact_be.exceptions.CustomException;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -141,6 +143,21 @@ public class StaffService {
             staffRepository.save(staff);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Failed to delete staff", e);
+        }
+    }
+    
+    public void deleteStaffs(IdsReq ids) {
+        try {
+            List<String> idsList = ids.getIds();
+            for (String id : idsList) {
+                Staff staff = staffRepository.findById(id);
+                if (staff != null) {
+                    staff.setDeleted(true);
+                    staffRepository.save(staff);
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new CustomException("Failed to delete staffs", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
