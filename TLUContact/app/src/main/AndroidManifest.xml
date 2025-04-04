@@ -14,9 +14,7 @@
         android:theme="@style/Theme.TLUContact"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".activities.LoginActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activities.DepartmentDetailActivity"
             android:exported="false" />
@@ -27,6 +25,7 @@
             android:name=".activities.AuthActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"
+            
             android:theme="@style/Theme.TLUContact">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,12 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.RegisterActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.RegisterFinalActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activities.ResetPasswordActivity"
             android:exported="false" />
