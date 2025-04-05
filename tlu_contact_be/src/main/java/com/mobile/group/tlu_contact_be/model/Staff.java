@@ -3,6 +3,8 @@ package com.mobile.group.tlu_contact_be.model;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,7 +17,8 @@ public class Staff {
     String position;
     String phone;
     String email;
-    String photoURL;
-    String unit;
+    String photoBase64;
+    List<String> departmentIds;
     String userID;
+    Boolean deleted = false;
 }

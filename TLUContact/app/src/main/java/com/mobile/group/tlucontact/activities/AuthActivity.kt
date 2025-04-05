@@ -36,6 +36,7 @@ class AuthActivity : AppCompatActivity() {
 
         // Xác định fragment hiện tại dựa trên ViewModel
         if (savedInstanceState == null) {
+            // Lần đầu tạo activity
             if (viewModel.isRegistering) {
                 loadFragment(RegisterFragment())
                 setRegisterSelected()
@@ -43,17 +44,14 @@ class AuthActivity : AppCompatActivity() {
                 loadFragment(LoginFragment())
                 setLoginSelected()
             }
-        }else {
-
+        } else {
+            // Khôi phục sau khi xoay thiết bị
             if (viewModel.isRegistering) {
                 setRegisterSelected()
             } else {
                 setLoginSelected()
             }
         }
-
-
-
 
         onBackPressedDispatcher.addCallback(this, backPressedCallback)
         updateUIVisibility(resources.configuration.orientation)

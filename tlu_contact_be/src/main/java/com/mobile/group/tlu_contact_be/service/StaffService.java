@@ -2,49 +2,52 @@ package com.mobile.group.tlu_contact_be.service;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.cloud.FirestoreClient;
+import com.mobile.group.tlu_contact_be.dto.request.IdsReq;
+import com.mobile.group.tlu_contact_be.dto.response.PageResponse;
+import com.mobile.group.tlu_contact_be.dto.response.staff.StaffRes;
 import com.mobile.group.tlu_contact_be.exceptions.CustomException;
+import com.mobile.group.tlu_contact_be.model.Department;
 import com.mobile.group.tlu_contact_be.model.Staff;
+import com.mobile.group.tlu_contact_be.repositories.StaffRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class StaffService {
 
-    private final Firestore db = FirestoreClient.getFirestore();
+    private final StaffRepository staffRepository;
 
-    public String createStaff(Staff staff) {
+    public StaffRes createStaff(Staff staff) {
         try {
-            if (existsByEmail(staff.getEmail())) {
+            if (staffRepository.existsByEmail(staff.getEmail())) {
                 throw new RuntimeException("Email đã tồn tại!");
             }
 
-            if (existsByPhone(staff.getPhone())) {
+            if (staffRepository.existsByPhone(staff.getPhone())) {
                 throw new RuntimeException("Số điện thoại đã tồn tại!");
             }
 
-            ApiFuture<WriteResult> future = db.collection("staffs").document(staff.getStaffId()).set(staff);
-            future.get();
-            return staff.getStaffId();
+            staffRepository.save(staff);
+            return getStaffRes(staff);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Failed to create staff", e);
         }
     }
 
-    public Staff getStaff(String staffId) {
+    public StaffRes getStaff(String staffId) {
         try {
-            DocumentReference docRef = db.collection("staffs").document(staffId);
-            ApiFuture<DocumentSnapshot> future = docRef.get();
-            DocumentSnapshot document = future.get();
-            if (document.exists()) {
-                return document.toObject(Staff.class);
+            Staff staff = staffRepository.findById(staffId);
+            if (staff != null) {
+                return getStaffRes(staff);
             }
             throw new CustomException("CBGV không tồn tại.", HttpStatus.NOT_FOUND);
         } catch (InterruptedException | ExecutionException e) {
@@ -52,31 +55,37 @@ public class StaffService {
         }
     }
 
-    public List<Staff> getAllStaff() {
-        List<Staff> staffList = new ArrayList<>();
+    public PageResponse<StaffRes> getAllStaff(Integer page, Integer size, Boolean sort, String search, Boolean deleted) {
         try {
-            ApiFuture<QuerySnapshot> future = db.collection("staffs").get();
-            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
-                staffList.add(document.toObject(Staff.class));
-            }
-            return staffList;
+            // Mặc định page = 1, size = 10, sort = true (ASC), deleted = false
+            page = (page == null || page < 1) ? 1 : page;
+            size = (size == null || size < 1) ? 10 : size;
+            sort = sort == null || sort;
+            deleted = deleted != null && deleted;
+            
+            List<Staff> staffList = staffRepository.findAll(page, size, sort, search, deleted);
+            long totalItems = staffRepository.count(deleted);
+            long totalPages = (totalItems + size - 1) / size;
+            
+            List<StaffRes> staffResList = staffList.stream()
+                    .map(this::getStaffRes)
+                    .collect(Collectors.toList());
+            
+            return PageResponse.<StaffRes>builder()
+                    .content(staffResList)
+                    .page(page)
+                    .size(size)
+                    .totalElements(totalItems)
+                    .totalPages(totalPages)
+                    .build();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Failed to get all staff", e);
         }
     }
 
-    public Staff updateStaff(String staffId, Staff request) {
+    public StaffRes updateStaff(String staffId, Staff request) {
         try {
-            DocumentReference docRef = db.collection("staffs").document(staffId);
-            ApiFuture<DocumentSnapshot> future = docRef.get();
-            DocumentSnapshot document = future.get();
-
-            if (!document.exists()) {
-                throw new RuntimeException("Nhân viên không tồn tại!");
-            }
-
-            Staff existingStaff = document.toObject(Staff.class);
+            Staff existingStaff = staffRepository.findById(staffId);
             if (existingStaff == null) {
                 throw new CustomException("CBGV không tồn tại.", HttpStatus.NOT_FOUND);
             }
@@ -87,26 +96,36 @@ public class StaffService {
             if (request.getPosition() != null && !request.getPosition().isBlank()) {
                 existingStaff.setPosition(request.getPosition());
             }
-            if (request.getUnit() != null && !request.getUnit().isBlank()) {
-                existingStaff.setUnit(request.getUnit());
+            if (request.getDepartmentIds() != null) {
+                existingStaff.setDepartmentIds(request.getDepartmentIds());
             }
-            if (request.getPhotoURL() != null && !request.getPhotoURL().isBlank()) {
-                existingStaff.setPhotoURL(request.getPhotoURL());
+            if (request.getPhotoBase64() != null && !request.getPhotoBase64().isBlank()) {
+                existingStaff.setPhotoBase64(request.getPhotoBase64());
             }
-
-            if (!existingStaff.getEmail().equals(request.getEmail()) && existsByEmail(request.getEmail())) {
+            
+            // Kiểm tra email và phone
+            if (request.getEmail() != null && !request.getEmail().equals(existingStaff.getEmail()) 
+                    && staffRepository.existsByEmail(request.getEmail())) {
                 throw new RuntimeException("Email đã tồn tại!");
             }
-            if (!existingStaff.getPhone().equals(request.getPhone()) && existsByPhone(request.getPhone())) {
+            if (request.getPhone() != null && !request.getPhone().equals(existingStaff.getPhone()) 
+                    && staffRepository.existsByPhone(request.getPhone())) {
                 throw new RuntimeException("Số điện thoại đã tồn tại!");
             }
+            
+            // Cập nhật các trường khác nếu có
+            if (request.getEmail() != null) {
+                existingStaff.setEmail(request.getEmail());
+            }
+            if (request.getPhone() != null) {
+                existingStaff.setPhone(request.getPhone());
+            }
+            if (request.getDeleted() != null) {
+                existingStaff.setDeleted(request.getDeleted());
+            }
 
-            request.setStaffId(existingStaff.getStaffId());
-
-            db.collection("staffs").document(staffId).set(request).get();
-
-            return request;
-
+            staffRepository.save(existingStaff);
+            return getStaffRes(existingStaff);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Failed to update staff", e);
         }
@@ -114,34 +133,51 @@ public class StaffService {
 
     public void deleteStaff(String staffId) {
         try {
-            db.collection("staff").document(staffId).delete().get();
+            Staff staff = staffRepository.findById(staffId);
+            if (staff == null) {
+                throw new CustomException("CBGV không tồn tại.", HttpStatus.NOT_FOUND);
+            }
+            
+            // Soft delete
+            staff.setDeleted(true);
+            staffRepository.save(staff);
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to delete staff", e);
+        }
+    }
+    
+    public void deleteStaffs(IdsReq ids) {
+        try {
+            List<String> idsList = ids.getIds();
+            for (String id : idsList) {
+                Staff staff = staffRepository.findById(id);
+                if (staff != null) {
+                    staff.setDeleted(true);
+                    staffRepository.save(staff);
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new CustomException("Failed to delete staffs", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    public void hardDeleteStaff(String staffId) {
+        try {
+            staffRepository.delete(staffId);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Failed to delete staff", e);
         }
     }
 
-    private boolean existsByEmail(String email) {
+    private StaffRes getStaffRes(Staff staff) {
         try {
-            ApiFuture<QuerySnapshot> future = db.collection("staff")
-                    .whereEqualTo("email", email)
-                    .limit(1)
-                    .get();
-            return !future.get().getDocuments().isEmpty();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to check email existence", e);
+            List<Department> departments = new ArrayList<>();
+            if (staff.getDepartmentIds() != null && !staff.getDepartmentIds().isEmpty()) {
+                departments = staffRepository.findDepartmentsByIds(staff.getDepartmentIds());
+            }
+            return new StaffRes(staff, departments);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException("Failed to get staff response", e);
         }
     }
-
-    private boolean existsByPhone(String phone) {
-        try {
-            ApiFuture<QuerySnapshot> future = db.collection("staff")
-                    .whereEqualTo("phone", phone)
-                    .limit(1)
-                    .get();
-            return !future.get().getDocuments().isEmpty();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Failed to check phone existence", e);
-        }
-    }
-
 }

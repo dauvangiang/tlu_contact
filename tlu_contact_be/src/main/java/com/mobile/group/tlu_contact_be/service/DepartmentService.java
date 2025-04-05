@@ -30,10 +30,9 @@ public class DepartmentService {
                     .code(genCode(Type.DEPARTMENT))
                     .name(request.getName())
                     .address(request.getAddress())
-                    .logoURL(request.getLogoUrl())
+                    .logoBase64(request.getLogoBase64())
                     .phone(request.getPhone())
                     .email(request.getEmail())
-                    .fax(request.getFax())
                     .parentDepartmentId(request.getParentDepartmentId())
                     .type(request.getType())
                     .dependentDepartmentIds(Collections.emptyList())
@@ -51,7 +50,7 @@ public class DepartmentService {
     private void updateDependentDepartment(String dependentId, String departmentId) {
         try {
             QueryDocumentSnapshot snapshot = departmentRepo.getDepartment(departmentId);
-            if (snapshot.exists()) {
+            if (snapshot != null) {
                 departmentRepo.updateDependentDepartment(dependentId, departmentId);
             }
         } catch (ExecutionException | InterruptedException e) {
@@ -126,17 +125,14 @@ public class DepartmentService {
             if (request.getAddress() != null && !request.getAddress().isBlank()) {
                 department.setAddress(request.getAddress());
             }
-            if (request.getLogoUrl() != null && !request.getLogoUrl().isBlank()) {
-                department.setLogoURL(request.getLogoUrl());
+            if (request.getLogoBase64() != null && !request.getLogoBase64().isBlank()) {
+                department.setLogoBase64(request.getLogoBase64());
             }
             if (request.getPhone() != null && !request.getPhone().isBlank()) {
                 department.setPhone(request.getPhone());
             }
             if (request.getEmail() != null && !request.getEmail().isBlank()) {
                 department.setEmail(request.getEmail());
-            }
-            if (request.getFax() != null && !request.getFax().isBlank()) {
-                department.setFax(request.getFax());
             }
             if (request.getParentDepartmentId() != null && !request.getParentDepartmentId().isBlank()) {
                 department.setParentDepartmentId(request.getParentDepartmentId());

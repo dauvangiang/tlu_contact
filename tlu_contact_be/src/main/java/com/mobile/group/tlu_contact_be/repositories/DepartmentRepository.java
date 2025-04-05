@@ -15,7 +15,11 @@ import java.util.stream.Collectors;
 @Repository
 @Getter
 public class DepartmentRepository {
-    private final CollectionReference collection = FirestoreClient.getFirestore().collection("departments");
+    private final CollectionReference collection;
+
+    public DepartmentRepository(Firestore firestore) {
+         collection = firestore.collection("departments");
+    }
 
     public List<QueryDocumentSnapshot> getDepartments(Integer page, Integer size, Boolean sort, String search, Boolean deleted) throws ExecutionException, InterruptedException {
         List<Filter> filters = new ArrayList<>();
