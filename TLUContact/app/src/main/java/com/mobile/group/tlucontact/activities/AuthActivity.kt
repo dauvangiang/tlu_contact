@@ -53,9 +53,6 @@ class AuthActivity : AppCompatActivity() {
             }
         }
 
-
-
-
         onBackPressedDispatcher.addCallback(this, backPressedCallback)
         updateUIVisibility(resources.configuration.orientation)
     }
