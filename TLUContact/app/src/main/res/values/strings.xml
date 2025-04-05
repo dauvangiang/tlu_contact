@@ -42,4 +42,7 @@
     <string name="confirm_password">Nhập lại mật khẩu</string>
     <string name="edit_title">Chỉnh sửa</string>
     <string name="view">Xem</string>
+    <string name="show_password">Hiển thị mật khẩu</string>
+    <string name="hide_password">Ẩn mật khẩu</string>
+
 </resources>

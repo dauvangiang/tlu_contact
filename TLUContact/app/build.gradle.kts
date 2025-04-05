@@ -41,8 +41,11 @@ android {
 }
 
 dependencies {
+
     implementation ("com.sun.mail:android-mail:1.6.2")
     implementation ("com.sun.mail:android-activation:1.6.2")
+    implementation("androidx.fragment:fragment-ktx:1.5.5") // Thay đổi phiên bản nếu cần thiết
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1") // Thay đổi phiên bản nếu cần thiết
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.constraintlayout)
