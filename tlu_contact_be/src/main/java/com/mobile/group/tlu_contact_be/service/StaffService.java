@@ -1,8 +1,5 @@
 package com.mobile.group.tlu_contact_be.service;
 
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
-import com.google.firebase.cloud.FirestoreClient;
 import com.mobile.group.tlu_contact_be.dto.response.PageResponse;
 import com.mobile.group.tlu_contact_be.dto.response.staff.StaffRes;
 import com.mobile.group.tlu_contact_be.exceptions.CustomException;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -162,5 +160,9 @@ public class StaffService {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException("Failed to get staff response", e);
         }
+    }
+
+    public void setUid(String code, String uid) {
+        staffRepository.getCollection().document(code).update(Map.of("userID", uid));
     }
 }

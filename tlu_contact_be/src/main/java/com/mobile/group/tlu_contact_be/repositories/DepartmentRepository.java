@@ -58,12 +58,11 @@ public class DepartmentRepository {
         return querySnapshot.isEmpty() ? null : querySnapshot.getDocuments().getFirst();
     }
 
-    public void updateDependentDepartment(String dependentId, String departmentId) {
-        try {
-            collection.document(departmentId)
-                    .update("dependentDepartments", FieldValue.arrayUnion(dependentId));
-        } catch (Exception e) {
-            //ignored
-        }
+    public List<QueryDocumentSnapshot> getChild(String parentId) throws ExecutionException, InterruptedException {
+        Query query = collection.whereEqualTo("parentDepartmentId", parentId)
+                .whereEqualTo("deleted", false)
+                .orderBy("name");
+        QuerySnapshot querySnapshot = query.get().get();
+        return querySnapshot.isEmpty() ? null : querySnapshot.getDocuments();
     }
 }

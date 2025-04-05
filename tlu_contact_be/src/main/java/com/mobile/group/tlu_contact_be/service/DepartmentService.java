@@ -9,6 +9,7 @@ import com.mobile.group.tlu_contact_be.dto.request.department.UpdateDepartmentRe
 import com.mobile.group.tlu_contact_be.dto.response.department.DepartmentRes;
 import com.mobile.group.tlu_contact_be.exceptions.CustomException;
 import com.mobile.group.tlu_contact_be.model.Department;
+import com.mobile.group.tlu_contact_be.model.DepartmentType;
 import com.mobile.group.tlu_contact_be.repositories.DepartmentRepository;
 import com.mobile.group.tlu_contact_be.utils.Utils;
 import lombok.RequiredArgsConstructor;
@@ -34,73 +35,35 @@ public class DepartmentService {
                     .phone(request.getPhone())
                     .email(request.getEmail())
                     .parentDepartmentId(request.getParentDepartmentId())
-                    .type(request.getType())
-                    .dependentDepartmentIds(Collections.emptyList())
+                    .typeId(request.getTypeId())
                     .deleted(false)
                     .build();
             ApiFuture<WriteResult> future = departmentRepo.getCollection().document(department.getCode()).set(department);
-            future.get(); // Đợi thao tác hoàn thành
-            updateDependentDepartment(department.getCode(), department.getParentDepartmentId());
+            future.get();
             return department;
         } catch (InterruptedException | ExecutionException e) {
             throw new CustomException("Failed to create department", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private void updateDependentDepartment(String dependentId, String departmentId) {
+    public Department getDepartment(String id) {
         try {
-            QueryDocumentSnapshot snapshot = departmentRepo.getDepartment(departmentId);
-            if (snapshot != null) {
-                departmentRepo.updateDependentDepartment(dependentId, departmentId);
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            throw new CustomException("Parent department not exists", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    public DepartmentRes getDepartment(String departmentCode) {
-        try {
-            QueryDocumentSnapshot documentSnapshot = departmentRepo.getDepartment(departmentCode);
+            QueryDocumentSnapshot documentSnapshot = departmentRepo.getDepartment(id);
             if (documentSnapshot == null) throw new CustomException("Department not found", HttpStatus.NOT_FOUND);
-            return getDepartmentRes(documentSnapshot.toObject(Department.class));
+            return documentSnapshot.toObject(Department.class);
         } catch (InterruptedException | ExecutionException e) {
             throw new CustomException("Failed to get department", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private DepartmentRes getDepartmentRes(Department department) throws ExecutionException, InterruptedException {
-        Map<String, String> parentDepartment = new HashMap<>();
-        if (department.getParentDepartmentId() != null) {
-            QueryDocumentSnapshot snapshot = departmentRepo.getDepartment(department.getParentDepartmentId());
-            String name = snapshot == null ? null : snapshot.toObject(Department.class).getName();
-            parentDepartment.put("code", department.getParentDepartmentId());
-            parentDepartment.put("name", name);
-        }
-
-        List<Map<String, String>> dependentDepartments = new ArrayList<>();
-        if (department.getDependentDepartmentIds() != null && !department.getDependentDepartmentIds().isEmpty()) {
-            for (String id : department.getDependentDepartmentIds()) {
-                QueryDocumentSnapshot snapshot = departmentRepo.getDepartment(id);
-                String name = snapshot == null ? null : snapshot.toObject(Department.class).getName();
-
-                Map<String, String> dep = new HashMap<>();
-                dep.put("code", id); dep.put("name", name);
-                dependentDepartments.add(dep);
-            }
-        }
-
-        return new DepartmentRes(department, parentDepartment, dependentDepartments);
-    }
-
-    public List<DepartmentRes> getAllDepartments(Integer page, Integer size, Boolean sort, String search, Boolean deleted) {
-        List<DepartmentRes> departmentsRes = new ArrayList<>();
+    public List<Department> getAllDepartments(Integer page, Integer size, Boolean sort, String search, Boolean deleted) {
+        List<Department> departments = new ArrayList<>();
         try {
             List<QueryDocumentSnapshot> documentSnapshots = departmentRepo.getDepartments(page, size, sort, search, deleted);
             for (QueryDocumentSnapshot document : documentSnapshots) {
-                DepartmentRes departmentRes = getDepartmentRes(document.toObject(Department.class));
-                departmentsRes.add(departmentRes);
+                departments.add(document.toObject(Department.class));
             }
-            return departmentsRes;
+            return departments;
         } catch (ExecutionException | InterruptedException e) {
             throw new CustomException("Failed to get departments", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -137,8 +100,8 @@ public class DepartmentService {
             if (request.getParentDepartmentId() != null && !request.getParentDepartmentId().isBlank()) {
                 department.setParentDepartmentId(request.getParentDepartmentId());
             }
-            if (request.getType() != null && !request.getType().isBlank()) {
-                department.setType(request.getType());
+            if (request.getTypeId() != null) {
+                department.setTypeId(request.getTypeId());
             }
 
             departmentRepo.getCollection().document(departmentId).set(department).get();
@@ -174,6 +137,19 @@ public class DepartmentService {
             return !snapshot.isEmpty();
         } catch (InterruptedException | ExecutionException e) {
             throw new CustomException("Đã có lỗi xảy ra!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public List<Department> getChild(String parentId) {
+        try {
+            List<QueryDocumentSnapshot> snapshots = departmentRepo.getChild(parentId);
+            List<Department> departments = new ArrayList<>();
+            for (QueryDocumentSnapshot document : snapshots) {
+                departments.add(document.toObject(Department.class));
+            }
+            return departments;
+        } catch (ExecutionException | InterruptedException e) {
+            throw new CustomException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

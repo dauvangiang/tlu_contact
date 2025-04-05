@@ -120,4 +120,8 @@ public class StudentService {
             throw new CustomException("Failed to delete student", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public void setUid(String code, String uid) {
+        studentRepo.getCollection().document(code).update(Map.of("userID", uid));
+    }
 }

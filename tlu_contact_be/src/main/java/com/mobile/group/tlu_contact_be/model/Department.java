@@ -1,5 +1,6 @@
 package com.mobile.group.tlu_contact_be.model;
 
+import com.mobile.group.tlu_contact_be.dto.request.department.CreateDepartmentReq;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,7 +20,6 @@ public class Department {
     String phone;
     String email;
     String parentDepartmentId;
-    String type;
-    List<String> dependentDepartmentIds;
+    String typeId;
     Boolean deleted = false;
 }
