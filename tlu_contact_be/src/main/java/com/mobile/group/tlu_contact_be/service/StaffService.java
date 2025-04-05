@@ -1,5 +1,6 @@
 package com.mobile.group.tlu_contact_be.service;
 
+import com.mobile.group.tlu_contact_be.dto.request.IdsReq;
 import com.mobile.group.tlu_contact_be.dto.response.PageResponse;
 import com.mobile.group.tlu_contact_be.dto.response.staff.StaffRes;
 import com.mobile.group.tlu_contact_be.exceptions.CustomException;
@@ -142,6 +143,21 @@ public class StaffService {
         }
     }
     
+    public void deleteStaffs(IdsReq ids) {
+        try {
+            List<String> idsList = ids.getIds();
+            for (String id : idsList) {
+                Staff staff = staffRepository.findById(id);
+                if (staff != null) {
+                    staff.setDeleted(true);
+                    staffRepository.save(staff);
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new CustomException("Failed to delete staffs", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public void hardDeleteStaff(String staffId) {
         try {
             staffRepository.delete(staffId);

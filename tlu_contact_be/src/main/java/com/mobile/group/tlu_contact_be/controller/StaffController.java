@@ -1,5 +1,6 @@
 package com.mobile.group.tlu_contact_be.controller;
 
+import com.mobile.group.tlu_contact_be.dto.request.IdsReq;
 import com.mobile.group.tlu_contact_be.dto.response.BaseResponse;
 import com.mobile.group.tlu_contact_be.dto.response.staff.StaffRes;
 import com.mobile.group.tlu_contact_be.model.Staff;
@@ -41,9 +42,9 @@ public class StaffController {
         return ResponseEntity.ok(new BaseResponse<>(staffService.updateStaff(staffId, request)));
     }
 
-    @GetMapping("v1/staff/delete/{staffId}")
-    public ResponseEntity<Object> deleteStaff(@PathVariable String staffId) {
-        staffService.deleteStaff(staffId);
+    @PostMapping("v1/staff/delete")
+    public ResponseEntity<Object> deleteStaffs(@RequestBody IdsReq ids) {
+        staffService.deleteStaffs(ids);
         return ResponseEntity.ok(new BaseResponse<>("Đã xóa thành công"));
     }
     
