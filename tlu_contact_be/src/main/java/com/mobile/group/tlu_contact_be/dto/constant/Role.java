@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Role implements BaseEnum<String> {
     STAFF("CBGV"),
-    STUDENT("SV");
+    STUDENT("SV"),
+    ADMIN("ADMIN");
 
     private final String value;
 
@@ -14,7 +15,7 @@ public enum Role implements BaseEnum<String> {
     @JsonCreator
     public static Role fromValue(String value) {
         for (Role column : values()) {
-            if (column.value.equals(value))
+            if (column.value.equalsIgnoreCase(value))
                 return column;
         }
         throw new RuntimeException();

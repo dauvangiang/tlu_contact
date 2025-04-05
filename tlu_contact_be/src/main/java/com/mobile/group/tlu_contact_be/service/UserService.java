@@ -28,19 +28,16 @@ import java.util.concurrent.ExecutionException;
 import com.mobile.group.tlu_contact_be.dto.constant.Role;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final Firestore db;
     private final FirebaseAuth firebaseAuth;
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
     @Value("${firebase.api.key}")
     private String FIREBASE_API_KEY;
-
-    public UserService(FirebaseApp firebaseApp) {
-        this.db = FirestoreClient.getFirestore(firebaseApp);
-        this.firebaseAuth = FirebaseAuth.getInstance();
-    }
+    private final StudentService studentService;
+    private final StaffService staffService;
 
     public UserRecord register(CreateUserReq request) {
         if (checkEmailExists(request.getEmail())) {
@@ -65,13 +62,10 @@ public class UserService {
 
     @Async
     void saveUserToFirestore(String uid, CreateUserReq request) {
-        Role role = null;
-        if(request.getEmail().endsWith("@tlu.edu.vn")){
+        Role role = Role.STUDENT;
+
+        if (request.getEmail().contains("@tlu.edu.vn")) {
             role = Role.STAFF;
-        } else if (request.getEmail().endsWith("@e.tlu.edu.vn")){
-            role = Role.STUDENT;
-        } else {
-            throw new CustomException("Địa chỉ email không hợp lệ.");
         }
 
         User user = User.builder()
@@ -79,7 +73,7 @@ public class UserService {
                 .email(request.getEmail())
                 .displayName(request.getDisplayName())
                 .phoneNumber(request.getPhoneNumber())
-                .photoURL(request.getPhotoUrl())
+                .photoBase64(request.getPhotoBase64())
                 .role(role)
                 .build();
 
@@ -163,5 +157,17 @@ public class UserService {
         } catch (InterruptedException | ExecutionException e) {
             throw new CustomException("Failed to delete user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public Object getUserProfile(String code, String role) {
+        switch (Role.fromValue(role)) {
+            case STUDENT -> {
+                return studentService.getStudent(code);
+            }
+            case STAFF -> {
+                return staffService.getStaff(code);
+            }
+        }
+        throw new CustomException("Failed to load profile", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

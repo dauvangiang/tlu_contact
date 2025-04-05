@@ -11,12 +11,11 @@ public class CreateDepartmentReq {
     @NotBlank(message = "Tên đơn vị không được để trống.")
     String name;
     String address;
-    String logoUrl;
+    String logoBase64;
     @NotBlank(message = "Số điện thoại không được để trống.")
     String phone;
     @NotBlank(message = "Email không được để trống.")
     String email;
-    String fax;
     String parentDepartmentId;
     @NotBlank(message = "Loại đơn vị không được để trống.")
     String type;

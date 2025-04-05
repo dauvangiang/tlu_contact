@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 public class StudentRes {
     String studentId;
     String fullName;
-    String photoURL;
+    String photoBase64;
     String phone;
     String email;
     String address;
@@ -26,7 +26,7 @@ public class StudentRes {
     public StudentRes(Student student, Department department) {
         this.studentId = student.getStudentId();
         this.fullName = student.getFullName();
-        this.photoURL = student.getPhotoURL();
+        this.photoBase64 = student.getPhotoBase64();
         this.phone = student.getPhone();
         this.email = student.getEmail();
         this.address = student.getAddress();
