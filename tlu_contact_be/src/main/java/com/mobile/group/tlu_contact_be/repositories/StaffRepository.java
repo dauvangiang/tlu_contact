@@ -6,6 +6,7 @@ import com.google.firebase.cloud.FirestoreClient;
 import com.mobile.group.tlu_contact_be.dto.response.staff.StaffRes;
 import com.mobile.group.tlu_contact_be.model.Department;
 import com.mobile.group.tlu_contact_be.model.Staff;
+import lombok.Getter;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Repository
+@Getter
 public class StaffRepository {
 
     private final CollectionReference collection;

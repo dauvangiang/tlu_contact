@@ -13,5 +13,5 @@ public class UpdateDepartmentReq {
     String phone;
     String email;
     String parentDepartmentId;
-    String type;
+    String typeId;
 }

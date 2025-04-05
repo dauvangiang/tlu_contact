@@ -2,17 +2,16 @@ package com.mobile.group.tlu_contact_be.service;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
-import com.google.firebase.cloud.FirestoreClient;
 import com.mobile.group.tlu_contact_be.dto.request.auth.UserLoginReq;
 import com.mobile.group.tlu_contact_be.dto.request.user.CreateUserReq;
+import com.mobile.group.tlu_contact_be.dto.response.staff.StaffRes;
+import com.mobile.group.tlu_contact_be.dto.response.student.StudentRes;
 import com.mobile.group.tlu_contact_be.exceptions.CustomException;
 import com.mobile.group.tlu_contact_be.model.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -169,5 +168,20 @@ public class UserService {
             }
         }
         throw new CustomException("Failed to load profile", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public void refToUser(String code, String email, String uid) {
+        QueryDocumentSnapshot snapshot = null;
+        if (email.endsWith("@e.tlu.edu.vn") || email.endsWith("@e.wru.edu.vn")) {
+            StudentRes studentRes = studentService.getStudent(code);
+            if (studentRes.getUserID() != null) {
+                throw new CustomException("Mã sinh viên không hợp lệ.");
+            } else { studentService.setUid(code, uid); }
+        } else if (email.endsWith("@tlu.edu.vn") || email.endsWith("@wru.edu.vn")) {
+            StaffRes staffRes = staffService.getStaff(code);
+            if (staffRes.getUserID() != null) {
+                throw new CustomException("Mã CBGV không hợp lệ.");
+            } else { staffService.setUid(code, uid); }
+        }
     }
 }
